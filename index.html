@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>S&OP Arena</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="S&OP Arena">
+        <span class="brand-mark">S</span>
+        <span>S&OP Arena</span>
+      </a>
+      <nav class="nav-links" aria-label="Navegacion principal">
+        <a href="#journey">Journey</a>
+        <a href="#simulators">Mini juegos</a>
+        <a href="#cases">Casos</a>
+        <a href="#ai">IA</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-visual" aria-hidden="true">
+          <div class="sop-flow">
+            <div class="flow-header">
+              <span>Sincronizacion Down - Top</span>
+              <strong>ONE Process</strong>
+            </div>
+            <div class="flow-ladder">
+              <div class="flow-step activity">
+                <small>01</small>
+                <div>
+                  <h3>Activity Review</h3>
+                  <p>Marketing + Ventas</p>
+                </div>
+              </div>
+              <div class="flow-step demand">
+                <small>02</small>
+                <div>
+                  <h3>Demand Review</h3>
+                  <p>Demand Planning + Comercial</p>
+                </div>
+              </div>
+              <div class="flow-step supply">
+                <small>03</small>
+                <div>
+                  <h3>Supply & Demand Review</h3>
+                  <p>Supply, Demand, Operaciones</p>
+                </div>
+              </div>
+              <div class="flow-step business">
+                <small>04</small>
+                <div>
+                  <h3>Comite de Negocio</h3>
+                  <p>Marketing, Ventas, SC, Finanzas</p>
+                </div>
+              </div>
+              <div class="flow-step executive">
+                <small>05</small>
+                <div>
+                  <h3>S&OP Ejecutivo</h3>
+                  <p>Board + Gerencia General</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">Supply Chain Leadership Lab</p>
+          <h1>Aprender S&OP jugando a decidir bajo presion.</h1>
+          <div class="quote-rotator" id="quoteRotator">S&OP no es una reunion.</div>
+          <p class="hero-text">
+            Una experiencia interactiva para convertir forecast, gaps, restricciones
+            y trade-offs en decisiones visibles. Cada accion mueve KPIs.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#simulators">Empezar desafio</a>
+            <a class="secondary-action" href="#journey">Ver roadmap</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="journey" class="section journey-section">
+        <div class="section-heading">
+          <p class="eyebrow">Learning Journey</p>
+          <h2>De alumno a director de Supply Chain</h2>
+        </div>
+        <div class="roadmap" id="roadmap"></div>
+      </section>
+
+      <section class="section dashboard-section" aria-labelledby="dashboard-title">
+        <div class="section-heading">
+          <p class="eyebrow">Dashboard vivo</p>
+          <h2 id="dashboard-title">Tus decisiones impactan el negocio</h2>
+        </div>
+        <div class="dashboard">
+          <div class="kpi-grid" id="kpiGrid"></div>
+          <div class="board-panel">
+            <div class="panel-header">
+              <h3>Estado del ciclo</h3>
+              <button class="icon-button" id="resetGame" type="button" aria-label="Reiniciar dashboard" title="Reiniciar dashboard">↺</button>
+            </div>
+            <div class="sync-meter">
+              <span>Sincronizacion</span>
+              <div class="meter-track"><div id="syncBar" class="meter-fill"></div></div>
+              <strong id="syncScore">72</strong>
+            </div>
+            <p id="boardNarrative" class="board-narrative">
+              El negocio tiene un gap visible. Todavia hay espacio para decidir antes de ejecutar.
+            </p>
+            <div class="impact-panel" id="impactPanel">
+              <span>Ultima decision</span>
+              <p>Todavia no tomaste una decision. Cuando juegues, aca vas a ver que KPI se movio y por que.</p>
+              <div class="impact-list" id="impactList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="simulators" class="section simulators-section">
+        <div class="section-heading">
+          <p class="eyebrow">Mini juegos</p>
+          <h2>Entrenar decisiones, no memorizar teoria</h2>
+          <p class="section-subtitle">
+            Cada decision cambia el dashboard: mirá “Ultima decision” para ver que KPIs subieron,
+            cuales bajaron y que objetivo contrapuesto apareció.
+          </p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Simuladores">
+          <button class="tab active" type="button" data-game="gap" role="tab" aria-selected="true">Gap Challenge</button>
+          <button class="tab" type="button" data-game="stock" role="tab" aria-selected="false">Stock Detective</button>
+          <button class="tab" type="button" data-game="crisis" role="tab" aria-selected="false">Crisis Room</button>
+          <button class="tab" type="button" data-game="bias" role="tab" aria-selected="false">Bias Buster</button>
+          <button class="tab" type="button" data-game="quiz" role="tab" aria-selected="false">S&OP Quiz</button>
+        </div>
+
+        <div class="game-shell">
+          <article class="game-panel active" id="game-gap">
+            <div class="game-copy">
+              <div class="game-topline">
+                <div>
+                  <h3 id="gapTitle">Cubri el GAP sin romper el negocio</h3>
+                  <p id="gapBrief">
+                    El target mensual es 100. El forecast realista llega a 93. Elegi acciones
+                    para cerrar el gap cuidando margen, servicio, stock y waste.
+                  </p>
+                </div>
+                <button class="scenario-button" id="nextGapScenario" type="button">Nuevo escenario</button>
+              </div>
+            </div>
+            <div class="gap-layout">
+              <div class="gap-bars" aria-label="Comparacion de target y forecast">
+                <div class="bar target" id="targetBar"><span id="targetLabel">Target 100</span></div>
+                <div class="bar forecast" id="forecastBar"><span id="forecastLabel">Forecast 93</span></div>
+              </div>
+              <div class="actions-list" id="gapActions"></div>
+            </div>
+            <div class="feedback" id="gapFeedback">Selecciona acciones. El board espera un plan, no deseos.</div>
+          </article>
+
+          <article class="game-panel" id="game-stock">
+            <div class="game-copy">
+              <div class="game-topline">
+                <div>
+                  <h3 id="stockTitle">Stock Detective</h3>
+                  <p id="stockBrief">
+                    Mira el comportamiento del stock y detecta que paso. La respuesta correcta
+                    mejora servicio y reduce urgencias.
+                  </p>
+                </div>
+                <button class="scenario-button" id="nextStockScenario" type="button">Nuevo escenario</button>
+              </div>
+            </div>
+            <div class="stock-game">
+              <svg class="stock-chart" viewBox="0 0 760 260" role="img" aria-label="Grafico de stock real con safety stock">
+                <line x1="40" y1="210" x2="720" y2="210" class="axis" />
+                <line x1="40" y1="40" x2="40" y2="210" class="axis" />
+                <line x1="40" y1="160" x2="720" y2="160" class="safety" />
+                <line x1="40" y1="85" x2="720" y2="85" class="max-stock" />
+                <polyline class="stock-line" id="stockLine" points="45,90 120,112 190,135 265,158 330,52 405,80 475,118 540,154 605,188 680,202 720,130" />
+                <circle class="event-point" id="stockPointA" cx="330" cy="52" r="10" />
+                <circle class="event-point second" id="stockPointB" cx="605" cy="188" r="10" />
+                <text x="50" y="78" class="chart-label">Stock max</text>
+                <text x="50" y="153" class="chart-label">Safety stock</text>
+              </svg>
+              <div class="quiz-options" id="stockOptions"></div>
+            </div>
+            <div class="feedback" id="stockFeedback">Detecta el patron antes de correr a apagar el incendio.</div>
+          </article>
+
+          <article class="game-panel" id="game-crisis">
+            <div class="game-copy">
+              <div class="game-topline">
+                <div>
+                  <h3 id="crisisTitle">Crisis Room: faltan 3 puntos</h3>
+                  <p id="crisisBrief">
+                    Estas en la reunion diaria del 24 de febrero. El mes cierra en 97%.
+                    Logistica trae tres alternativas. Decidi como director de SC.
+                  </p>
+                </div>
+                <button class="scenario-button" id="nextCrisisScenario" type="button">Nuevo escenario</button>
+              </div>
+            </div>
+            <div class="crisis-board" id="crisisBoard"></div>
+            <div class="feedback" id="crisisFeedback">La mejor decision no siempre maximiza ventas: administra riesgo.</div>
+          </article>
+
+          <article class="game-panel" id="game-bias">
+            <div class="game-copy">
+              <div class="game-topline">
+                <div>
+                  <h3 id="biasTitle">Bias Buster</h3>
+                  <p id="biasBrief">
+                    Detecta si el forecast esta sesgado. Una mala lectura puede inflar stock,
+                    romper servicio o esconder un problema comercial.
+                  </p>
+                </div>
+                <button class="scenario-button" id="nextBiasScenario" type="button">Nuevo escenario</button>
+              </div>
+            </div>
+            <div class="bias-game">
+              <div class="bias-table" id="biasTable"></div>
+              <div class="quiz-options" id="biasOptions"></div>
+            </div>
+            <div class="feedback" id="biasFeedback">Lee el patron antes de ajustar el numero.</div>
+          </article>
+
+          <article class="game-panel" id="game-quiz">
+            <div class="game-copy">
+              <div class="game-topline">
+                <div>
+                  <h3>S&OP Quiz</h3>
+                  <p>
+                    Responde preguntas del proceso S&OP. Cada respuesta correcta mejora sincronizacion,
+                    accuracy y calidad de decision.
+                  </p>
+                </div>
+                <button class="scenario-button" id="resetQuiz" type="button">Reiniciar quiz</button>
+              </div>
+            </div>
+            <div class="quiz-game">
+              <div class="quiz-progress" id="quizProgress"></div>
+              <div class="quiz-question" id="quizQuestion"></div>
+              <div class="quiz-options" id="quizOptions"></div>
+            </div>
+            <div class="feedback" id="quizFeedback">Elegí una respuesta para empezar.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="cases" class="section cases-section">
+        <div class="section-heading">
+          <p class="eyebrow">Casos reales</p>
+          <h2>Storytelling para pensar como planner</h2>
+        </div>
+        <div class="story-layout">
+          <div class="case-grid" id="caseGrid"></div>
+          <article class="story-stage" id="storyStage" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section id="ai" class="section ai-section">
+        <div class="section-heading">
+          <p class="eyebrow">IA aplicada</p>
+          <h2>Menos energia en reportar, mas energia en decidir</h2>
+        </div>
+        <div class="ai-tools">
+          <div>
+            <h3>Auditor de premisas</h3>
+            <p>Detecta assumptions sin responsable, riesgos sin contramedida y gaps ocultos.</p>
+          </div>
+          <div>
+            <h3>Generador de escenarios</h3>
+            <p>Convierte incertidumbres cronicas en planes A/B/C con triggers claros.</p>
+          </div>
+          <div>
+            <h3>Minuta ejecutiva</h3>
+            <p>Resume decisiones del board en acciones breves para sincronizar la organizacion.</p>
+          </div>
+        </div>
+        <div class="ai-coach">
+          <div class="coach-header">
+            <div>
+              <p class="eyebrow">Coach IA</p>
+              <h3>Preguntale al copiloto S&OP</h3>
+            </div>
+            <span id="coachStatus">modo demo</span>
+          </div>
+          <div class="chat-window" id="chatWindow">
+            <div class="chat-bubble ai">Soy tu coach S&OP. Puedo ayudarte a leer gaps, premisas, restricciones y trade-offs.</div>
+          </div>
+          <div class="quick-prompts" id="quickPrompts"></div>
+          <form class="chat-form" id="chatForm">
+            <input id="chatInput" type="text" autocomplete="off" placeholder="Ej: Tengo forecast 93 y target 100, que hago?" />
+            <button type="submit">Enviar</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
