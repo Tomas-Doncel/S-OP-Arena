@@ -84,22 +84,29 @@
 
       <section id="journey" class="section journey-section">
         <div class="section-heading">
-          <p class="eyebrow">Learning Journey</p>
-          <h2>De alumno a director de Supply Chain</h2>
+          <p class="eyebrow">Ruta de aprendizaje</p>
+          <h2>Primero teoria, despues presion</h2>
+          <p class="section-subtitle">
+            Un roadmap visual para entender el proceso, sus reuniones, KPIs y trade-offs antes de entrar a jugar.
+          </p>
         </div>
         <div class="roadmap" id="roadmap"></div>
       </section>
 
-      <section class="section dashboard-section" aria-labelledby="dashboard-title">
+      <section id="simulators" class="section simulators-section">
         <div class="section-heading">
-          <p class="eyebrow">Dashboard vivo</p>
-          <h2 id="dashboard-title">Tus decisiones impactan el negocio</h2>
+          <p class="eyebrow">Campo de entrenamiento</p>
+          <h2>Mini simulaciones para practicar conceptos</h2>
+          <p class="section-subtitle">
+            Cada decision modifica KPIs en tiempo real, guarda tu mejor score y muestra el costo del trade-off.
+          </p>
         </div>
-        <div class="dashboard">
+
+        <div class="dashboard mini-dashboard">
           <div class="kpi-grid" id="kpiGrid"></div>
           <div class="board-panel">
             <div class="panel-header">
-              <h3>Estado del ciclo</h3>
+              <h3>Estado del negocio</h3>
               <button class="icon-button" id="resetGame" type="button" aria-label="Reiniciar dashboard" title="Reiniciar dashboard">↺</button>
             </div>
             <div class="sync-meter">
@@ -108,7 +115,7 @@
               <strong id="syncScore">72</strong>
             </div>
             <p id="boardNarrative" class="board-narrative">
-              El negocio tiene un gap visible. Todavia hay espacio para decidir antes de ejecutar.
+              El negocio tiene tension visible. Todavia hay espacio para decidir antes de ejecutar.
             </p>
             <div class="impact-panel" id="impactPanel">
               <span>Ultima decision</span>
@@ -117,24 +124,15 @@
             </div>
           </div>
         </div>
-      </section>
-
-      <section id="simulators" class="section simulators-section">
-        <div class="section-heading">
-          <p class="eyebrow">Mini juegos</p>
-          <h2>Entrenar decisiones, no memorizar teoria</h2>
-          <p class="section-subtitle">
-            Cada decision cambia el dashboard: mirá “Ultima decision” para ver que KPIs subieron,
-            cuales bajaron y que objetivo contrapuesto apareció.
-          </p>
-        </div>
 
         <div class="tabs" role="tablist" aria-label="Simuladores">
-          <button class="tab active" type="button" data-game="gap" role="tab" aria-selected="true">Gap Challenge</button>
-          <button class="tab" type="button" data-game="stock" role="tab" aria-selected="false">Stock Detective</button>
-          <button class="tab" type="button" data-game="crisis" role="tab" aria-selected="false">Crisis Room</button>
-          <button class="tab" type="button" data-game="bias" role="tab" aria-selected="false">Bias Buster</button>
-          <button class="tab" type="button" data-game="quiz" role="tab" aria-selected="false">S&OP Quiz</button>
+          <button class="tab active" type="button" data-game="gap" role="tab" aria-selected="true">Forecast vs objetivo</button>
+          <button class="tab" type="button" data-game="stock" role="tab" aria-selected="false">Desafio de stock</button>
+          <button class="tab" type="button" data-game="supply" role="tab" aria-selected="false">Restricciones de supply</button>
+          <button class="tab" type="button" data-game="executive" role="tab" aria-selected="false">Decision ejecutiva</button>
+          <button class="tab" type="button" data-game="spike" role="tab" aria-selected="false">Pico de demanda</button>
+          <button class="tab" type="button" data-game="meeting" role="tab" aria-selected="false">Reunion S&OP</button>
+          <button class="tab" type="button" data-game="quiz" role="tab" aria-selected="false">Quiz S&OP</button>
         </div>
 
         <div class="game-shell">
@@ -145,7 +143,7 @@
                   <h3 id="gapTitle">Cubri el GAP sin romper el negocio</h3>
                   <p id="gapBrief">
                     El target mensual es 100. El forecast realista llega a 93. Elegi acciones
-                    para cerrar el gap cuidando margen, servicio, stock y waste.
+                    para cerrar el gap cuidando margen, servicio, inventario y riesgo.
                   </p>
                 </div>
                 <button class="scenario-button" id="nextGapScenario" type="button">Nuevo escenario</button>
@@ -165,7 +163,7 @@
             <div class="game-copy">
               <div class="game-topline">
                 <div>
-                  <h3 id="stockTitle">Stock Detective</h3>
+                  <h3 id="stockTitle">Desafio de stock</h3>
                   <p id="stockBrief">
                     Mira el comportamiento del stock y detecta que paso. La respuesta correcta
                     mejora servicio y reduce urgencias.
@@ -191,41 +189,60 @@
             <div class="feedback" id="stockFeedback">Detecta el patron antes de correr a apagar el incendio.</div>
           </article>
 
-          <article class="game-panel" id="game-crisis">
+          <article class="game-panel" id="game-supply">
             <div class="game-copy">
               <div class="game-topline">
                 <div>
-                  <h3 id="crisisTitle">Crisis Room: faltan 3 puntos</h3>
-                  <p id="crisisBrief">
-                    Estas en la reunion diaria del 24 de febrero. El mes cierra en 97%.
-                    Logistica trae tres alternativas. Decidi como director de SC.
-                  </p>
+                  <h3 id="supplyTitle">Restricciones de supply</h3>
+                  <p id="supplyBrief">Decidi como asignar capacidad limitada sin romper margen, servicio ni clientes clave.</p>
                 </div>
-                <button class="scenario-button" id="nextCrisisScenario" type="button">Nuevo escenario</button>
+                <button class="scenario-button" id="nextSupplyScenario" type="button">Nuevo escenario</button>
               </div>
             </div>
-            <div class="crisis-board" id="crisisBoard"></div>
-            <div class="feedback" id="crisisFeedback">La mejor decision no siempre maximiza ventas: administra riesgo.</div>
+            <div class="crisis-board" id="supplyBoard"></div>
+            <div class="feedback" id="supplyFeedback">La restriccion no bloquea la conversacion: la ordena.</div>
           </article>
 
-          <article class="game-panel" id="game-bias">
+          <article class="game-panel" id="game-executive">
             <div class="game-copy">
               <div class="game-topline">
                 <div>
-                  <h3 id="biasTitle">Bias Buster</h3>
-                  <p id="biasBrief">
-                    Detecta si el forecast esta sesgado. Una mala lectura puede inflar stock,
-                    romper servicio o esconder un problema comercial.
-                  </p>
+                  <h3 id="executiveTitle">Decision ejecutiva</h3>
+                  <p id="executiveBrief">Tomá una decision de liderazgo con objetivos contrapuestos visibles.</p>
                 </div>
-                <button class="scenario-button" id="nextBiasScenario" type="button">Nuevo escenario</button>
+                <button class="scenario-button" id="nextExecutiveScenario" type="button">Nuevo escenario</button>
               </div>
             </div>
-            <div class="bias-game">
-              <div class="bias-table" id="biasTable"></div>
-              <div class="quiz-options" id="biasOptions"></div>
+            <div class="crisis-board" id="executiveBoard"></div>
+            <div class="feedback" id="executiveFeedback">Liderar es decidir que se protege y que costo se acepta.</div>
+          </article>
+
+          <article class="game-panel" id="game-spike">
+            <div class="game-copy">
+              <div class="game-topline">
+                <div>
+                  <h3 id="spikeTitle">Pico de demanda</h3>
+                  <p id="spikeBrief">Una señal de demanda cambia de golpe. Reaccioná rapido sin sobreactuar.</p>
+                </div>
+                <button class="scenario-button" id="nextSpikeScenario" type="button">Nuevo escenario</button>
+              </div>
             </div>
-            <div class="feedback" id="biasFeedback">Lee el patron antes de ajustar el numero.</div>
+            <div class="crisis-board" id="spikeBoard"></div>
+            <div class="feedback" id="spikeFeedback">No toda señal exige producir todo: primero lee probabilidad e impacto.</div>
+          </article>
+
+          <article class="game-panel" id="game-meeting">
+            <div class="game-copy">
+              <div class="game-topline">
+                <div>
+                  <h3 id="meetingTitle">Reunion S&OP</h3>
+                  <p id="meetingBrief">Convertí conflicto funcional en un solo plan con decisiones, responsables y premisas.</p>
+                </div>
+                <button class="scenario-button" id="nextMeetingScenario" type="button">Nuevo escenario</button>
+              </div>
+            </div>
+            <div class="crisis-board" id="meetingBoard"></div>
+            <div class="feedback" id="meetingFeedback">Una buena reunion termina con decisiones claras, no con mas dudas.</div>
           </article>
 
           <article class="game-panel" id="game-quiz">
@@ -251,10 +268,48 @@
         </div>
       </section>
 
+      <section id="master" class="section master-section">
+        <div class="section-heading">
+          <p class="eyebrow">Simulacion maestra S&OP</p>
+          <h2>Dirigi el negocio</h2>
+          <p class="section-subtitle">
+            Seis meses de decisiones conectadas. Lo que decidas hoy puede aparecer como costo, riesgo o ventaja en meses futuros.
+          </p>
+        </div>
+        <div class="master-shell">
+          <div class="master-top">
+            <div class="month-track" id="monthTrack"></div>
+            <div class="master-score">
+              <span>Score actual</span>
+              <strong id="masterScore">0</strong>
+            </div>
+          </div>
+          <div class="master-grid">
+            <article class="month-card" id="monthCard"></article>
+            <aside class="signal-panel">
+              <h3>Business signals</h3>
+              <div class="signal-list" id="signalList"></div>
+              <div class="delayed-box">
+                <span>Consecuencias diferidas</span>
+                <p id="delayedConsequences">Todavia no hay impactos futuros acumulados.</p>
+              </div>
+            </aside>
+          </div>
+          <div class="master-actions">
+            <button class="secondary-action" id="restartMaster" type="button">Reiniciar simulacion</button>
+            <button class="primary-action" id="nextMasterMonth" type="button">Avanzar mes</button>
+          </div>
+          <article class="final-evaluation" id="finalEvaluation"></article>
+        </div>
+      </section>
+
       <section id="cases" class="section cases-section">
         <div class="section-heading">
-          <p class="eyebrow">Casos reales</p>
-          <h2>Storytelling para pensar como planner</h2>
+          <p class="eyebrow">Historias reales de Supply Chain</p>
+          <h2>Historias para pensar como lider</h2>
+          <p class="section-subtitle">
+            Errores, crisis y decisiones reales en formato narrativo. La teoria se recuerda mejor cuando tiene tension.
+          </p>
         </div>
         <div class="story-layout">
           <div class="case-grid" id="caseGrid"></div>

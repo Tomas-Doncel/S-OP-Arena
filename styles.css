@@ -325,7 +325,8 @@ h3 {
 .road-step,
 .scenario-button,
 .prompt-chip,
-.icon-button {
+.icon-button,
+.month-dot {
   border: 0;
   cursor: pointer;
 }
@@ -373,7 +374,8 @@ h3 {
 .ai-tools,
 .lesson-panel,
 .story-layout,
-.ai-coach {
+.ai-coach,
+.master-shell {
   margin: 0 auto;
   max-width: 1120px;
 }
@@ -381,7 +383,18 @@ h3 {
 .roadmap {
   display: grid;
   gap: 14px;
-  grid-template-columns: repeat(7, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  position: relative;
+}
+
+.roadmap::before {
+  background: linear-gradient(90deg, transparent, rgba(32, 36, 42, 0.22), transparent);
+  content: "";
+  height: 3px;
+  left: 4%;
+  position: absolute;
+  right: 4%;
+  top: 84px;
 }
 
 .road-step {
@@ -394,6 +407,7 @@ h3 {
   position: relative;
   text-align: left;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
+  z-index: 1;
 }
 
 .road-step:hover,
@@ -407,9 +421,21 @@ h3 {
 }
 
 .road-step strong {
-  display: block;
+  align-items: center;
+  background: var(--charcoal);
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
   font-size: 28px;
+  height: 54px;
+  justify-content: center;
   margin-bottom: 18px;
+  width: 54px;
+}
+
+.road-step:hover strong,
+.road-step.active strong {
+  background: var(--red);
 }
 
 .road-step h3 {
@@ -494,6 +520,10 @@ h3 {
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
 }
 
+.mini-dashboard {
+  margin-bottom: 24px;
+}
+
 .kpi-grid {
   display: grid;
   gap: 12px;
@@ -520,7 +550,14 @@ h3 {
 .kpi-card.changed {
   border-color: var(--charcoal);
   box-shadow: var(--shadow);
+  animation: kpiPulse 0.5s ease;
   transform: translateY(-2px);
+}
+
+@keyframes kpiPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+  100% { transform: translateY(-2px); }
 }
 
 .kpi-card span {
@@ -842,6 +879,213 @@ h3 {
   line-height: 1.45;
   margin-top: 18px;
   padding: 16px 18px;
+}
+
+.master-section {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(222, 216, 204, 0.35)),
+    var(--paper);
+}
+
+.master-shell {
+  display: grid;
+  gap: 18px;
+}
+
+.master-top {
+  align-items: stretch;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) 160px;
+}
+
+.month-track {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding: 12px;
+}
+
+.month-dot {
+  background: #f2eee6;
+  border-radius: 8px;
+  color: var(--muted);
+  min-height: 70px;
+  padding: 10px;
+  text-align: left;
+}
+
+.month-dot span {
+  align-items: center;
+  background: #e5ded1;
+  border-radius: 50%;
+  color: var(--charcoal);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  height: 24px;
+  justify-content: center;
+  margin-bottom: 8px;
+  width: 24px;
+}
+
+.month-dot strong {
+  display: block;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.month-dot.active {
+  background: var(--charcoal);
+  color: #fff;
+}
+
+.month-dot.active span {
+  background: var(--yellow);
+}
+
+.month-dot.done {
+  box-shadow: inset 0 0 0 2px rgba(29, 127, 104, 0.35);
+}
+
+.master-score,
+.event-card,
+.signal,
+.delayed-box,
+.final-evaluation {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(25, 28, 32, 0.06);
+}
+
+.master-score {
+  padding: 16px;
+}
+
+.master-score span,
+.event-card span,
+.delayed-box span,
+.signal span {
+  color: var(--red);
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.master-score strong {
+  display: block;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.master-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.month-card,
+.signal-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(25, 28, 32, 0.06);
+  padding: clamp(20px, 4vw, 30px);
+}
+
+.month-card h3 {
+  font-size: clamp(24px, 3vw, 36px);
+  max-width: 760px;
+}
+
+.event-card {
+  margin: 16px 0;
+  padding: 16px;
+}
+
+.event-card strong {
+  font-size: 20px;
+}
+
+.master-options {
+  display: grid;
+  gap: 12px;
+}
+
+.signal-panel h3 {
+  margin-bottom: 16px;
+}
+
+.signal-list {
+  display: grid;
+  gap: 10px;
+}
+
+.signal,
+.delayed-box {
+  padding: 14px;
+}
+
+.signal p,
+.delayed-box p {
+  color: var(--muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.master-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.final-evaluation {
+  display: none;
+  padding: clamp(20px, 4vw, 30px);
+}
+
+.final-evaluation:not(:empty) {
+  display: block;
+}
+
+.final-evaluation h3 {
+  font-size: clamp(28px, 4vw, 46px);
+}
+
+.review-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 18px 0;
+}
+
+.review-grid > div {
+  background: #f2eee6;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.review-grid h4 {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+
+.review-grid ul {
+  color: var(--muted);
+  display: grid;
+  gap: 8px;
+  line-height: 1.35;
+  margin: 0;
+  padding-left: 18px;
 }
 
 .stock-game {
@@ -1174,7 +1418,10 @@ h3 {
   .stock-game,
   .bias-game,
   .lesson-panel,
-  .story-layout {
+  .story-layout,
+  .master-top,
+  .master-grid,
+  .review-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1189,6 +1436,10 @@ h3 {
 
   .roadmap {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .month-track {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .case-grid,
@@ -1234,8 +1485,13 @@ h3 {
   .roadmap,
   .case-grid,
   .ai-tools,
-  .kpi-grid {
+  .kpi-grid,
+  .month-track {
     grid-template-columns: 1fr;
+  }
+
+  .roadmap::before {
+    display: none;
   }
 
   .game-topline,
