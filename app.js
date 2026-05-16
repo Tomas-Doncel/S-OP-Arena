@@ -145,13 +145,20 @@ let currentSupplyScenario = 0;
 let currentExecutiveScenario = 0;
 let currentSpikeScenario = 0;
 let currentMeetingScenario = 0;
+let currentDecisionScenario = 0;
 let currentStory = 0;
 let currentQuiz = 0;
 let quizAnswered = new Set();
+let quizFirstAttempts = new Map();
 let selectedGapActions = new Set();
 let masterMonth = 0;
 let masterHistory = [];
 let masterPending = [];
+let masterState = {};
+let masterTimeline = [];
+let shownConsequenceIds = new Set();
+let completionModalShown = false;
+let activeTimelineKpis = new Set(["service", "margin", "cash", "cost", "risk"]);
 let lastDecision = {
   title: "Todavia no tomaste una decision.",
   copy: "Cuando juegues, aca vas a ver que KPI se movio y por que.",
@@ -160,12 +167,6 @@ let lastDecision = {
 let impacts = {
   gap: {},
   stock: {},
-  supply: {},
-  executive: {},
-  spike: {},
-  meeting: {},
-  quiz: {},
-  story: {},
   master: {},
 };
 
@@ -188,6 +189,24 @@ const kpiAliases = {
   fillRate: "service",
   accuracy: "satisfaction",
 };
+
+const masterBaseState = {
+  service: 84,
+  margin: 28,
+  cost: 38,
+  risk: 34,
+  cash: 72,
+};
+
+const masterKpis = [
+  ["service", "Servicio", "%", "Promesa al cliente"],
+  ["margin", "Margen", "%", "Calidad del negocio"],
+  ["cost", "Costo SC", "%", "Mejor si baja"],
+  ["risk", "Riesgo", "%", "Mejor si baja"],
+  ["cash", "Cash", "%", "Capital disponible"],
+];
+
+const masterKpiMeta = Object.fromEntries(masterKpis.map(([key, label, suffix]) => [key, { label, suffix }]));
 
 const gapScenarios = [
   {
@@ -750,6 +769,13 @@ const decisionGames = {
   },
 };
 
+const decisionPracticeScenarios = [
+  ...decisionGames.supply.scenarios.map((scenario) => ({ ...scenario, family: "Restricciones de supply" })),
+  ...decisionGames.executive.scenarios.map((scenario) => ({ ...scenario, family: "Decision ejecutiva" })),
+  ...decisionGames.spike.scenarios.map((scenario) => ({ ...scenario, family: "Pico de demanda" })),
+  ...decisionGames.meeting.scenarios.map((scenario) => ({ ...scenario, family: "Reunion S&OP" })),
+];
+
 const quizQuestions = [
   {
     q: "Que es S&OP en el enfoque del curso?",
@@ -875,84 +901,22 @@ const quizQuestions = [
 
 const stories = [
   {
-    mark: "97",
+    mark: "Caso 01",
     title: "Faltan 3 puntos",
-    setup: "El board pide llegar al target. El director SC debe decidir entre costo, calidad, cliente y servicio.",
-    question: "Que deberia hacer un director antes de elegir una alternativa?",
-    options: [
-      ["Hacer visible costo, riesgo y cliente antes de decidir.", { sync: 3, margin: 1 }, "Exacto. La decision mejora cuando el trade-off queda claro."],
-      ["Elegir lo que llegue al numero sin preguntar nada.", { sync: -5, service: -3 }, "Eso puede cerrar ventas, pero suele romper confianza."],
-    ],
+    setup: "El board pide llegar al target, pero el mes cierra en 97. Logistica puede abrir una operacion extraordinaria, Comercial propone sustituir producto y Finanzas advierte que el margen ya esta bajo.",
+    lesson: "La decision madura no empieza preguntando como llegar al numero, sino que costo acepta el negocio para llegar. S&OP sirve para mostrar alternativas con impacto en servicio, margen, riesgo de cliente y aprendizaje futuro.",
   },
   {
-    mark: "10%",
-    title: "Cliente imprevisible",
-    setup: "Un cliente pide extra al final del mes durante siete ciclos. La incertidumbre cronica ya es una certeza.",
-    question: "Como deberia tratarse ese patron?",
-    options: [
-      ["Como escenario preparado con trigger y plan de respuesta.", { accuracy: 3, stock: 3, sync: 3 }, "Bien: si se repite, no es sorpresa operativa."],
-      ["Como evento nuevo cada mes.", { accuracy: -4, service: -4 }, "Ese es el loop que el planner debe romper."],
-    ],
+    mark: "Caso 02",
+    title: "El cliente imprevisible que ya era previsible",
+    setup: "Un cliente pide volumen extra al final del mes durante siete ciclos. Cada vez aparece como sorpresa, se arma urgencia, se fuerza stock y se discute quien tuvo la culpa.",
+    lesson: "Cuando una incertidumbre se repite, deja de ser sorpresa y pasa a ser escenario. El proceso deberia definir trigger, capacidad reservada, costo aprobado y regla comercial antes de que llegue el pedido.",
   },
   {
-    mark: "1",
-    title: "Un solo plan",
-    setup: "Ventas, Finanzas y Supply Chain no pueden operar con tres verdades distintas del futuro.",
-    question: "Que conversacion destraba el proceso?",
-    options: [
-      ["Premisas, riesgos, oportunidades y gap contra target.", { sync: 5, margin: 2 }, "Si todos ven la misma partitura, pueden tocar juntos."],
-      ["Defender el numero de cada area.", { sync: -6, accuracy: -2 }, "Eso convierte S&OP en subasta de numeros."],
-    ],
-  },
-  {
-    mark: "48h",
-    title: "La huelga que nadie tenia en el escenario",
-    setup: "Transporte avisa una medida de fuerza con dos dias de anticipacion. Hay stock, pero no capacidad para llevar todo.",
-    question: "Que separa una respuesta madura de una reaccion desesperada?",
-    options: [
-      ["Priorizar clientes, comunicar fechas y aprobar costos excepcionales.", { service: 3, cost: 2, risk: -4, satisfaction: 4, sync: 4 }, "Bien: crisis no significa enviar todo a cualquier costo, sino decidir prioridades."],
-      ["Despachar por orden de llegada para evitar discusiones.", { service: -4, satisfaction: -5, risk: 5, sync: -4 }, "Parece neutral, pero ignora valor, penalidades y promesa al cliente."],
-    ],
-  },
-  {
-    mark: "$",
+    mark: "Caso 03",
     title: "El volumen que destruyo margen",
-    setup: "El mes cerro arriba del target, pero el mix fue barato y se usaron fletes express. Ventas celebro, Finanzas no.",
-    question: "Que aprendizaje deberia llevarse al proximo ciclo?",
-    options: [
-      ["Medir volumen junto con mix, margen, costo logistico y cash.", { margin: 4, cash: 3, cost: -2, sync: 4 }, "Exacto. Un plan de cajas sin valor puede esconder una mala decision."],
-      ["Mientras el volumen cierre, el margen se revisa despues.", { margin: -5, cost: 4, cash: -3, sync: -4 }, "Ese enfoque transforma S&OP en una carrera de facturacion."],
-    ],
-  },
-  {
-    mark: "SKU",
-    title: "El promedio que escondio el quiebre",
-    setup: "La accuracy total parecia buena, pero el SKU mas importante fallo durante tres semanas.",
-    question: "Que deberia cambiar el planner?",
-    options: [
-      ["Bajar al nivel SKU/cliente donde se toma la decision real.", { service: 4, stock: 2, satisfaction: 3, sync: 4 }, "Bien: el agregado sirve para mirar, no siempre para decidir."],
-      ["Celebrar el promedio total y cerrar el analisis.", { service: -5, satisfaction: -4, accuracy: -3 }, "El promedio puede tapar el problema que ve el cliente."],
-    ],
-  },
-  {
-    mark: "AI",
-    title: "La alerta que llego antes que la reunion",
-    setup: "Un modelo detecta anomalía de demanda en e-commerce. El equipo duda porque no aparece en el forecast tradicional.",
-    question: "Como deberia usarse la IA en el proceso?",
-    options: [
-      ["Como senal para abrir escenario, validar premisas y definir trigger.", { accuracy: 3, service: 3, risk: -3, sync: 4 }, "Correcto: IA no reemplaza la decision, acelera la conversacion."],
-      ["Como orden automatica para producir todo el upside.", { stock: 4, cost: 4, risk: 5, margin: -3 }, "La IA sin gobernanza puede convertir una senal en sobrestock."],
-    ],
-  },
-  {
-    mark: "Q",
-    title: "Calidad freno el cierre",
-    setup: "Habia producto para llegar al numero, pero Calidad detecto un riesgo. El cliente no sabia nada todavia.",
-    question: "Que decision sostiene mejor la confianza?",
-    options: [
-      ["Bloquear lote, mostrar escenarios y decidir con el board.", { risk: -5, satisfaction: 4, sync: 5, margin: 1 }, "Bien: proteger confianza puede valer mas que cerrar una venta."],
-      ["Despachar y esperar si aparece reclamo.", { risk: 8, satisfaction: -8, margin: -4, sync: -7 }, "Llegar al numero transfiriendo riesgo al cliente rompe el proceso."],
-    ],
+    setup: "El mes cerro arriba del objetivo de volumen. La celebracion duro poco: el mix vendido fue barato, hubo descuentos fuera de plan y se usaron fletes express para sostener servicio.",
+    lesson: "Supply Chain no puede mirar solo cajas. Un S&OP serio conecta volumen con margen, costo logistico, cash y promesa de cliente. Vender mas no siempre significa dirigir mejor.",
   },
 ];
 
@@ -964,8 +928,8 @@ const masterMonths = [
     event: "Forecast dentro del rango esperado.",
     options: [
       ["Mantener plan base y documentar premisas", { service: 3, inventory: 1, margin: 2, cost: -1, risk: -3, satisfaction: 2, cash: 2, sync: 5 }, null, "Arrancaste con disciplina: claridad antes de velocidad."],
-      ["Crear buffer preventivo en SKUs A", { service: 2, inventory: 6, margin: -2, cost: 3, risk: 2, cash: -6, sync: -1 }, { month: 3, impact: { risk: 3, cash: -3 }, text: "El buffer preventivo empieza a presionar espacio y capital." }, "Protege servicio, pero compra costo futuro."],
-      ["Liberar cash en baja rotacion", { service: -3, inventory: -6, margin: 1, cost: -2, risk: 4, satisfaction: -3, cash: 7, sync: -2 }, { month: 2, impact: { service: -4, satisfaction: -4, risk: 3 }, text: "El recorte deja menos margen para absorber la promocion." }, "El cash mejora hoy, pero baja resiliencia."],
+      ["Crear buffer preventivo en SKUs A", { service: 2, inventory: 6, margin: -2, cost: 3, risk: 2, cash: -6, sync: -1 }, { month: 3, tone: "danger", impact: { risk: 3, cash: -3 }, text: "Alarma: el buffer preventivo empieza a presionar espacio y capital justo cuando aparece una restriccion." }, "Protege servicio, pero compra costo futuro."],
+      ["Liberar cash en baja rotacion", { service: -3, inventory: -6, margin: 1, cost: -2, risk: 4, satisfaction: -3, cash: 7, sync: -2 }, { month: 1, tone: "danger", impact: { service: -4, satisfaction: -4, risk: 3 }, text: "Alarma: como no te abasteciste lo suficiente, la promocion encuentra menos cobertura y sube el riesgo de quiebre." }, "El cash mejora hoy, pero baja resiliencia."],
     ],
   },
   {
@@ -974,8 +938,8 @@ const masterMonths = [
     messages: ["Marketing: la promo puede traer +15%.", "Supply: la capacidad no cubre todo el upside.", "Cliente: necesitamos fecha firme."],
     event: "Forecast spike por promocion.",
     options: [
-      ["Validar promo por mix y capacidad", { service: 4, inventory: -2, margin: 4, cost: 1, risk: -3, satisfaction: 4, cash: 2, sync: 6 }, null, "La promo entra al plan con restricciones visibles."],
-      ["Maximizar promo en clientes clave", { service: 2, inventory: -5, margin: -5, cost: 6, risk: 6, satisfaction: -2, cash: -4, sync: -5 }, { month: 3, impact: { risk: 4, cost: 3, satisfaction: -3 }, text: "La promo agresiva genera urgencias y promesas dificiles de cumplir." }, "Vender mas no siempre significa decidir mejor."],
+      ["Validar promo por mix y capacidad", { service: 4, inventory: -2, margin: 4, cost: 1, risk: -3, satisfaction: 4, cash: 2, sync: 6 }, { month: 2, tone: "benefit", impact: { service: 3, risk: -3, satisfaction: 2 }, text: "Beneficio: como validaste mix y capacidad, el faltante de proveedor no rompe completamente el servicio." }, "La promo entra al plan con restricciones visibles."],
+      ["Maximizar promo en clientes clave", { service: 2, inventory: -5, margin: -5, cost: 6, risk: 6, satisfaction: -2, cash: -4, sync: -5 }, { month: 2, tone: "danger", impact: { risk: 4, cost: 3, satisfaction: -3 }, text: "Alarma: la promo agresiva genera urgencias y promesas dificiles de cumplir cuando falla el proveedor." }, "Vender mas no siempre significa decidir mejor."],
       ["Reducir promo a canales controlados", { service: -2, inventory: 3, margin: -2, cost: -2, risk: -1, satisfaction: -5, cash: 1, sync: -3 }, null, "Protege operacion, pero golpea oportunidad comercial."],
     ],
   },
@@ -986,7 +950,7 @@ const masterMonths = [
     event: "Faltante de materia prima.",
     options: [
       ["Priorizar contrato penalizable", { service: 5, inventory: -3, margin: 2, cost: 2, risk: -5, satisfaction: 5, cash: 1, sync: 5 }, null, "Protegiste valor y riesgo comercial."],
-      ["Comprar spot para cubrir el pico", { service: 5, margin: -5, cost: 8, risk: 1, satisfaction: 3, cash: -6, sync: 1 }, { month: 4, impact: { margin: -3, cash: -4, cost: 3 }, text: "La compra spot llega a tiempo, pero su costo pega en el mes siguiente." }, "Correcto si se aprueba como excepcion, peligroso como habito."],
+      ["Comprar spot para cubrir el pico", { service: 5, margin: -5, cost: 8, risk: 1, satisfaction: 3, cash: -6, sync: 1 }, { month: 3, tone: "danger", impact: { margin: -3, cash: -4, cost: 3 }, text: "Alarma: la compra spot llega a tiempo, pero su costo pega en margen y cash el mes siguiente." }, "Correcto si se aprueba como excepcion, peligroso como habito."],
       ["Repartir material por contratos activos", { service: -4, margin: -2, cost: 1, risk: 5, satisfaction: -5, sync: -4 }, null, "Parece equilibrado, pero puede no proteger a nadie."],
     ],
   },
@@ -996,8 +960,8 @@ const masterMonths = [
     messages: ["Finanzas: necesitamos bajar capital de trabajo.", "Demanda: hay incertidumbre en dos clientes.", "Deposito: el espacio esta justo."],
     event: "Presion por reducir inventario.",
     options: [
-      ["Bajar inventario con segmentacion ABC", { service: 2, inventory: -5, margin: 2, cost: -3, risk: -2, satisfaction: 2, cash: 6, sync: 5 }, null, "Buen equilibrio: menos stock donde duele menos."],
-      ["Recorte rapido en familias de bajo margen", { service: -5, inventory: -8, margin: 1, cost: -4, risk: 6, satisfaction: -5, cash: 8, sync: -4 }, { month: 5, impact: { service: -5, satisfaction: -4, risk: 4 }, text: "El recorte rapido deja sin cobertura al pedido inesperado." }, "El Excel queda lindo, la operacion no tanto."],
+      ["Bajar inventario con segmentacion ABC", { service: 2, inventory: -5, margin: 2, cost: -3, risk: -2, satisfaction: 2, cash: 6, sync: 5 }, { month: 4, tone: "benefit", impact: { cash: 3, risk: -2, service: 2 }, text: "Beneficio: como segmentaste el inventario, el pedido inesperado encuentra cobertura en los SKUs criticos." }, "Buen equilibrio: menos stock donde duele menos."],
+      ["Recorte rapido en familias de bajo margen", { service: -5, inventory: -8, margin: 1, cost: -4, risk: 6, satisfaction: -5, cash: 8, sync: -4 }, { month: 4, tone: "danger", impact: { service: -5, satisfaction: -4, risk: 4 }, text: "Alarma: el recorte rapido deja sin cobertura al pedido inesperado y aparece riesgo de quiebre." }, "El Excel queda lindo, la operacion no tanto."],
       ["Sostener inventario hasta tener mejor senal", { service: 2, inventory: 3, margin: -1, cost: 2, risk: 1, satisfaction: 2, cash: -5, sync: -2 }, null, "Protege servicio, pero ignora la presion financiera."],
     ],
   },
@@ -1008,7 +972,7 @@ const masterMonths = [
     event: "Pedido inesperado de cliente.",
     options: [
       ["Aceptar parcial con fecha realista", { service: 4, inventory: -3, margin: 5, cost: 2, risk: -2, satisfaction: 5, cash: 3, sync: 6 }, null, "Ganaste margen sin prometer lo imposible."],
-      ["Aceptar con operativo express", { service: 1, inventory: -6, margin: 1, cost: 8, risk: 7, satisfaction: -3, cash: -2, sync: -5 }, { month: 6, impact: { risk: 4, cost: 4, satisfaction: -4 }, text: "La promesa agresiva crea tension justo cuando llega la crisis de transporte." }, "El volumen seduce, pero el servicio queda expuesto."],
+      ["Aceptar con operativo express", { service: 1, inventory: -6, margin: 1, cost: 8, risk: 7, satisfaction: -3, cash: -2, sync: -5 }, { month: 5, tone: "danger", impact: { risk: 4, cost: 4, satisfaction: -4 }, text: "Alarma: la promesa agresiva crea tension justo cuando llega la crisis de transporte." }, "El volumen seduce, pero el servicio queda expuesto."],
       ["Negociar entrega futura y menor volumen", { service: -2, margin: -6, cost: -2, risk: -1, satisfaction: -4, cash: -3, sync: -1 }, null, "Conservador: evita caos, pero pierde oportunidad estrategica."],
     ],
   },
@@ -1068,6 +1032,17 @@ function setImpact(scope, impact, decision) {
     lastDecision = { ...decision, impact: normalizedImpact };
   }
   updateBestScore(scope, normalizedImpact);
+  recalcState();
+}
+
+function resetTrainingKpis(title, copy) {
+  impacts.gap = {};
+  impacts.stock = {};
+  lastDecision = {
+    title,
+    copy,
+    impact: {},
+  };
   recalcState();
 }
 
@@ -1207,7 +1182,10 @@ function renderGapScenario() {
     `)
     .join("");
   document.querySelector("#gapFeedback").textContent = "Selecciona acciones. El board espera un plan, no deseos.";
-  setImpact("gap", {});
+  resetTrainingKpis(
+    "Nuevo escenario de forecast",
+    "Los KPIs volvieron al caso base: 72. Elegi acciones para ver impactos nuevos."
+  );
 }
 
 function updateGapGame() {
@@ -1251,46 +1229,41 @@ function renderStockScenario() {
   document.querySelector("#stockPointB").setAttribute("cx", scenario.points[1][0]);
   document.querySelector("#stockPointB").setAttribute("cy", scenario.points[1][1]);
   document.querySelector("#stockOptions").innerHTML = scenario.options
-    .map(([text], index) => `<button class="quiz-option" type="button" data-stock="${index}">${text}</button>`)
+    .map(([text], index) => `<button class="quiz-option" type="button" data-stock="${index}"><strong>Mi lectura:</strong> ${text}</button>`)
     .join("");
-  document.querySelector("#stockFeedback").textContent = "Detecta el patron antes de correr a apagar el incendio.";
-  setImpact("stock", {});
+  document.querySelector("#stockFeedback").textContent = "Elegí una lectura del patron. Este juego entrena diagnostico y no modifica KPIs.";
+  resetTrainingKpis(
+    "Nuevo escenario de stock",
+    "Los KPIs volvieron al caso base: 72. Este desafio no modifica el tablero porque evalua interpretacion, no decision."
+  );
 }
 
-function renderDecisionGame(gameKey) {
-  const game = decisionGames[gameKey];
-  const scenario = game.scenarios[game.current()];
-  document.querySelector(game.titleId).textContent = scenario.title;
-  document.querySelector(game.briefId).textContent = scenario.brief;
-  document.querySelector(game.boardId).innerHTML = scenario.options
+function renderDecisionPractice() {
+  const scenario = decisionPracticeScenarios[currentDecisionScenario];
+  document.querySelector("#decisionTitle").textContent = scenario.title;
+  document.querySelector("#decisionBrief").textContent = `${scenario.family}. ${scenario.brief}`;
+  document.querySelector("#decisionBoard").innerHTML = scenario.options
     .map(([title, copy], index) => `
-      <button class="crisis-card" type="button" data-decision-game="${gameKey}" data-decision="${index}">
+      <button class="crisis-card" type="button" data-decision="${index}">
         <strong>${title}</strong>
         <span>${copy}</span>
       </button>
     `)
     .join("");
-  document.querySelector(game.feedbackId).textContent = `Elegí una alternativa. Mejor score guardado: ${getBestScore(game.scope)}.`;
-  setImpact(game.scope, {});
+  document.querySelector("#decisionFeedback").textContent = "Elegí una alternativa. Este entrenamiento no modifica KPIs.";
 }
 
-function chooseDecisionGame(gameKey, optionIndex) {
-  const game = decisionGames[gameKey];
-  const scenario = game.scenarios[game.current()];
+function chooseDecisionPractice(optionIndex) {
+  const scenario = decisionPracticeScenarios[currentDecisionScenario];
   const choice = scenario.options[optionIndex];
-  document.querySelectorAll(`[data-decision-game="${gameKey}"]`).forEach((item) => item.classList.remove("selected"));
-  document.querySelector(`[data-decision-game="${gameKey}"][data-decision="${optionIndex}"]`).classList.add("selected");
-  setImpact(game.scope, choice[2], {
-    title: `${scenario.title}: ${choice[0]}`,
-    copy: `${choice[3]} Mejor score ${game.scope}: ${getBestScore(game.scope)}.`,
-  });
-  document.querySelector(game.feedbackId).textContent = `${choice[3]} Impacto: ${describeImpact(choice[2])}`;
+  document.querySelectorAll("#decisionBoard [data-decision]").forEach((item) => item.classList.remove("selected"));
+  document.querySelector(`#decisionBoard [data-decision="${optionIndex}"]`).classList.add("selected");
+  document.querySelector("#decisionFeedback").textContent = `${choice[3]} Practica de criterio: los KPIs quedan sin cambios.`;
 }
 
-function nextDecisionGame(gameKey) {
-  const game = decisionGames[gameKey];
-  game.setCurrent((game.current() + 1) % game.scenarios.length);
-  renderDecisionGame(gameKey);
+function nextDecisionPractice() {
+  currentDecisionScenario = (currentDecisionScenario + 1) % decisionPracticeScenarios.length;
+  renderDecisionPractice();
 }
 
 function describeImpact(impact = {}) {
@@ -1306,10 +1279,7 @@ function describeImpact(impact = {}) {
 
 function renderQuiz() {
   const question = quizQuestions[currentQuiz];
-  document.querySelector("#quizProgress").innerHTML = `
-    <span>Pregunta ${currentQuiz + 1} de ${quizQuestions.length}</span>
-    <strong>${quizAnswered.size}/${quizQuestions.length} respondidas</strong>
-  `;
+  updateQuizProgress();
   document.querySelector("#quizQuestion").innerHTML = `<h3>${question.q}</h3>`;
   document.querySelector("#quizOptions").innerHTML = question.options
     .map((option, index) => `
@@ -1318,36 +1288,38 @@ function renderQuiz() {
       </button>
     `)
     .join("");
-  document.querySelector("#quizFeedback").textContent = "Elegí una respuesta. Si acertás, el dashboard mejora.";
+  document.querySelector("#quizFeedback").textContent = "Elegí una respuesta. El quiz no modifica KPIs.";
+  document.querySelector("#nextQuizQuestion").hidden = true;
+}
+
+function updateQuizProgress() {
+  const answered = quizFirstAttempts.size;
+  const correct = [...quizFirstAttempts.values()].filter(Boolean).length;
+  const percentage = answered ? Math.round((correct / answered) * 100) : 0;
+  document.querySelector("#quizProgress").innerHTML = `
+    <span>Pregunta ${currentQuiz + 1} de ${quizQuestions.length}</span>
+    <strong>${quizAnswered.size}/${quizQuestions.length} respondidas · ${percentage}% correctas</strong>
+  `;
 }
 
 function renderCases() {
   document.querySelector("#caseGrid").innerHTML = stories
-    .map((story, index) => `
-      <button class="case-card ${index === currentStory ? "active" : ""}" type="button" data-story="${index}">
+    .map((story) => `
+      <article class="case-card story-read-card">
         <div class="case-art">${story.mark}</div>
         <div>
           <h3>${story.title}</h3>
           <p>${story.setup}</p>
+          <p class="story-lesson">${story.lesson}</p>
         </div>
-      </button>
+      </article>
     `)
     .join("");
-  renderStoryStage();
 }
 
 function renderStoryStage() {
-  const story = stories[currentStory];
-  document.querySelector("#storyStage").innerHTML = `
-    <p class="eyebrow">Decision narrativa</p>
-    <h3>${story.title}</h3>
-    <p>${story.question}</p>
-    <div class="story-options">
-      ${story.options.map(([text], index) => `<button class="quiz-option" type="button" data-story-choice="${index}">${text}</button>`).join("")}
-    </div>
-    <div class="feedback story-feedback" id="storyFeedback">Elegir revela como pensaria un planner bajo presion.</div>
-  `;
-  setImpact("story", {});
+  const stage = document.querySelector("#storyStage");
+  if (stage) stage.innerHTML = "";
 }
 
 function currentMasterImpact() {
@@ -1355,6 +1327,94 @@ function currentMasterImpact() {
   masterHistory.forEach((entry) => mergeImpact(total, entry.impact));
   masterPending.filter((item) => item.month <= masterMonth).forEach((item) => mergeImpact(total, item.impact));
   return total;
+}
+
+function getMasterState() {
+  const totalImpact = currentMasterImpact();
+  const next = { ...masterBaseState };
+  Object.entries(totalImpact).forEach(([key, value]) => {
+    if (key in next) next[key] = clamp(next[key] + value);
+  });
+  masterState = next;
+  return next;
+}
+
+function renderMasterKpis() {
+  const current = getMasterState();
+  document.querySelector("#masterKpiGrid").innerHTML = masterKpis
+    .map(([key, label, suffix, hint]) => {
+      const value = current[key];
+      const danger = inverseGood.has(key) ? value > 55 : value < 62;
+      const color = danger ? "var(--red)" : key === "margin" || key === "cash" ? "var(--green)" : "var(--charcoal)";
+      return `
+        <div class="master-kpi">
+          <span>${label}</span>
+          <strong style="color:${color}">${value}${suffix}</strong>
+          <small>${hint}</small>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function recordMasterSnapshot() {
+  if (!masterHistory[masterMonth]) return;
+  masterTimeline[masterMonth] = { month: masterMonth + 1, ...getMasterState() };
+}
+
+function activeConsequences() {
+  return masterPending.filter((item) => item.month <= masterMonth);
+}
+
+function showConsequenceModal(item) {
+  const modal = document.querySelector("#eventModal");
+  const card = modal.querySelector(".event-modal-card");
+  const kind = item.tone === "benefit" ? "Beneficio activado" : "Alarma activada";
+  card.classList.remove("danger", "benefit");
+  card.classList.add(item.tone === "benefit" ? "benefit" : "danger");
+  document.querySelector("#eventModalKind").textContent = kind;
+  document.querySelector("#eventModalTitle").textContent = item.tone === "benefit" ? "Tu decision anterior te ayudo" : "Consecuencia de una decision anterior";
+  document.querySelector("#eventModalCopy").textContent = item.text;
+  modal.classList.add("active");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function showNewConsequences() {
+  const item = activeConsequences().find((consequence) => !shownConsequenceIds.has(consequence.id));
+  if (!item) return false;
+  shownConsequenceIds.add(item.id);
+  showConsequenceModal(item);
+  return true;
+}
+
+function shouldShowCompletionModal() {
+  return masterHistory.filter(Boolean).length === masterMonths.length && !completionModalShown;
+}
+
+function showSimulationCompleteModal(force = false) {
+  if (completionModalShown && !force) return;
+  completionModalShown = true;
+  const modal = document.querySelector("#eventModal");
+  const card = modal.querySelector(".event-modal-card");
+  card.classList.remove("danger", "benefit");
+  card.classList.add("benefit");
+  document.querySelector("#eventModalKind").textContent = "Simulacion finalizada";
+  document.querySelector("#eventModalTitle").textContent = "Terminaste los 6 meses";
+  document.querySelector("#eventModalCopy").textContent =
+    "Ya completaste el ciclo S&OP. Revisa el scorecard final y toca Graficar evolucion de KPIs para ver como tus decisiones movieron servicio, margen, cash, costo y riesgo.";
+  modal.classList.add("active");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeConsequenceModal(showNext = true) {
+  const modal = document.querySelector("#eventModal");
+  modal.classList.remove("active");
+  modal.setAttribute("aria-hidden", "true");
+  if (showNext) {
+    setTimeout(() => {
+      if (!showNewConsequences() && shouldShowCompletionModal()) showSimulationCompleteModal();
+    }, 120);
+  }
 }
 
 function renderMasterSimulation() {
@@ -1392,26 +1452,27 @@ function renderMasterSimulation() {
     .map((message) => `<div class="signal"><span>${message.split(":")[0]}</span><p>${message.includes(":") ? message.split(":").slice(1).join(":").trim() : message}</p></div>`)
     .join("");
 
-  const pendingText = masterPending
-    .filter((item) => item.month >= masterMonth)
-    .map((item) => item.text)
-    .join(" ");
-  document.querySelector("#delayedConsequences").textContent = pendingText || "Todavia no hay impactos futuros acumulados.";
+  const visibleConsequences = masterPending.filter((item) => item.month <= masterMonth);
+  const consequenceHtml = [
+    ...visibleConsequences.map((item) => `
+      <div class="consequence-alert ${item.tone || "danger"}">
+        <strong>${item.tone === "benefit" ? "Beneficio" : "Alarma"}</strong>
+        <p>${item.text}</p>
+      </div>
+    `),
+  ].join("");
+  document.querySelector("#delayedConsequences").innerHTML = consequenceHtml || "Todavia no aparecieron impactos diferidos.";
 
   const totalImpact = currentMasterImpact();
-  if (masterHistory.filter(Boolean).length) {
-    setImpact("master", totalImpact, {
-      title: "Dirigi el negocio",
-      copy: "La simulacion maestra esta acumulando decisiones, eventos y consecuencias diferidas. La devolucion aparece al final.",
-    });
-  } else {
-    impacts.master = {};
-    recalcState();
-  }
+  renderMasterKpis();
+  recordMasterSnapshot();
 
   const score = Math.max(0, Math.round(impactScore(totalImpact) + masterHistory.length * 8));
   document.querySelector("#masterScore").textContent = score;
   renderFinalEvaluation(score);
+  if (!showNewConsequences() && shouldShowCompletionModal()) {
+    setTimeout(showSimulationCompleteModal, 160);
+  }
 }
 
 function chooseMasterDecision(optionIndex) {
@@ -1426,10 +1487,11 @@ function chooseMasterDecision(optionIndex) {
   };
   if (choice[2]) {
     masterPending = masterPending.filter((item) => item.from !== masterMonth);
-    masterPending.push({ ...choice[2], from: masterMonth, choice: optionIndex });
+    masterPending.push({ ...choice[2], id: `${masterMonth}-${choice[2].month}-${optionIndex}`, from: masterMonth, choice: optionIndex });
   } else {
     masterPending = masterPending.filter((item) => item.from !== masterMonth);
   }
+  if (masterMonth !== masterMonths.length - 1) completionModalShown = false;
   renderMasterSimulation();
 }
 
@@ -1439,6 +1501,7 @@ function renderFinalEvaluation(score) {
     node.innerHTML = "";
     return;
   }
+  const current = getMasterState();
   let rating = "Bombero operativo";
   if (score >= 120) rating = "Director SC world class";
   else if (score >= 95) rating = "Lider de Supply Chain";
@@ -1448,7 +1511,15 @@ function renderFinalEvaluation(score) {
   node.innerHTML = `
     <p class="eyebrow">Evaluacion final</p>
     <h3>${rating}</h3>
-    <p>Score final: <strong>${score}</strong>. Servicio ${state.service}%, margen ${state.margin}%, costo ${state.cost}%, riesgo ${state.risk}%, cash ${state.cash}%.</p>
+    <p>Score final: <strong>${score}</strong>. El resultado combina performance operativa, salud financiera y riesgo acumulado.</p>
+    <div class="scorecard-grid">
+      ${masterKpis.map(([key, label, suffix]) => `
+        <div class="scorecard-item">
+          <span>${label}</span>
+          <strong>${current[key]}${suffix}</strong>
+        </div>
+      `).join("")}
+    </div>
     <div class="review-grid">
       <div>
         <h4>Donde elegiste bien</h4>
@@ -1463,13 +1534,84 @@ function renderFinalEvaluation(score) {
         <ul>${choiceReview.improve.map((item) => `<li>${item}</li>`).join("")}</ul>
       </div>
     </div>
-    <div class="impact-list">
-      <div class="impact-chip ${state.service >= 80 ? "positive" : "negative"}"><strong>Servicio</strong><span>${state.service}%</span></div>
-      <div class="impact-chip ${state.margin >= 26 ? "positive" : "negative"}"><strong>Margen</strong><span>${state.margin}%</span></div>
-      <div class="impact-chip ${state.risk <= 38 ? "positive" : "negative"}"><strong>Riesgo</strong><span>${state.risk}%</span></div>
-      <div class="impact-chip ${state.cash >= 68 ? "positive" : "negative"}"><strong>Cash</strong><span>${state.cash}%</span></div>
+    <button class="scenario-button" id="showTimelineChart" type="button">Graficar evolucion de KPIs</button>
+    <div class="timeline-chart" id="timelineChart"></div>
+    <div class="impact-list score-summary">
+      <div class="impact-chip ${current.service >= 80 ? "positive" : "negative"}"><strong>Servicio</strong><span>${current.service}%</span></div>
+      <div class="impact-chip ${current.margin >= 26 ? "positive" : "negative"}"><strong>Margen</strong><span>${current.margin}%</span></div>
+      <div class="impact-chip ${current.risk <= 38 ? "positive" : "negative"}"><strong>Riesgo</strong><span>${current.risk}%</span></div>
+      <div class="impact-chip ${current.cash >= 68 ? "positive" : "negative"}"><strong>Cash</strong><span>${current.cash}%</span></div>
     </div>
   `;
+}
+
+function renderTimelineChart() {
+  const node = document.querySelector("#timelineChart");
+  if (!node) return;
+  const series = masterTimeline.filter(Boolean);
+  if (!series.length) return;
+  const chartKeys = [
+    ["service", "Servicio", "#1d7f68"],
+    ["margin", "Margen", "#2b6cb0"],
+    ["cash", "Cash", "#e7b84c"],
+    ["cost", "Costo", "#595f69"],
+    ["risk", "Riesgo", "#c44b3d"],
+  ];
+  const visibleKeys = chartKeys.filter(([key]) => activeTimelineKpis.has(key));
+  const width = 760;
+  const height = 280;
+  const pad = 34;
+  const baseline = series[0];
+  const allValues = visibleKeys.length
+    ? series.flatMap((item) => visibleKeys.map(([key]) => item[key] - baseline[key]))
+    : [0];
+  let minValue = Math.floor((Math.min(...allValues) - 4) / 5) * 5;
+  let maxValue = Math.ceil((Math.max(...allValues) + 4) / 5) * 5;
+  if (maxValue - minValue < 22) {
+    const mid = (maxValue + minValue) / 2;
+    minValue = Math.floor((mid - 12) / 5) * 5;
+    maxValue = Math.ceil((mid + 12) / 5) * 5;
+  }
+  const range = Math.max(1, maxValue - minValue);
+  const xFor = (index) => pad + (index * (width - pad * 2)) / Math.max(1, series.length - 1);
+  const yFor = (value) => height - pad - ((Math.max(minValue, Math.min(maxValue, value)) - minValue) * (height - pad * 2)) / range;
+  const formatAxis = (value) => `${value > 0 ? "+" : ""}${value}`;
+  const polylines = visibleKeys.map(([key, label, color]) => {
+    const points = series.map((item, index) => `${xFor(index)},${yFor(item[key] - baseline[key])}`).join(" ");
+    const markers = series.map((item, index) => `
+      <circle cx="${xFor(index)}" cy="${yFor(item[key] - baseline[key])}" r="5" fill="${color}" stroke="#fff" stroke-width="2">
+        <title>${label} mes ${item.month}: ${item[key]}</title>
+      </circle>
+    `).join("");
+    return `
+      <polyline points="${points}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><title>${label}</title></polyline>
+      ${markers}
+    `;
+  }).join("");
+  const labels = series.map((item, index) => `<text x="${xFor(index)}" y="${height - 8}" text-anchor="middle" font-size="12" font-weight="800">M${item.month}</text>`).join("");
+  const gridValues = [minValue, Math.round((minValue + maxValue) / 2), maxValue];
+  node.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Evolucion mensual de KPIs del simulador">
+      <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${height - pad}" stroke="#9a9489" stroke-width="2" />
+      <line x1="${pad}" y1="${height - pad}" x2="${width - pad}" y2="${height - pad}" stroke="#9a9489" stroke-width="2" />
+      ${gridValues.map((value) => `
+        <line x1="${pad}" y1="${yFor(value)}" x2="${width - pad}" y2="${yFor(value)}" stroke="#ded8cc" stroke-width="1" />
+        <text x="${pad - 8}" y="${yFor(value) + 4}" text-anchor="end" font-size="11" font-weight="800" fill="#70695f">${formatAxis(value)}</text>
+      `).join("")}
+      ${polylines}
+      ${visibleKeys.length ? "" : `<text x="${width / 2}" y="${height / 2}" text-anchor="middle" font-size="18" font-weight="900" fill="#70695f">Elegí un indicador para graficar</text>`}
+      ${labels}
+    </svg>
+    <p class="chart-note">Escala: variacion contra Mes 1. Asi se ven mejor los movimientos reales de cada decision.</p>
+    <div class="chart-legend">
+      ${chartKeys.map(([key, label, color]) => `
+        <button class="chart-toggle ${activeTimelineKpis.has(key) ? "active" : ""}" type="button" data-chart-toggle="${key}" style="--chart-color:${color}">
+          <i></i>${label}
+        </button>
+      `).join("")}
+    </div>
+  `;
+  node.classList.add("active");
 }
 
 function buildMasterReview() {
@@ -1497,6 +1639,11 @@ function restartMasterSimulation() {
   masterMonth = 0;
   masterHistory = [];
   masterPending = [];
+  masterTimeline = [];
+  shownConsequenceIds = new Set();
+  completionModalShown = false;
+  masterState = { ...masterBaseState };
+  closeConsequenceModal(false);
   renderMasterSimulation();
 }
 
@@ -1601,26 +1748,17 @@ function bindEvents() {
     document.querySelectorAll("#stockOptions .quiz-option").forEach((item) => item.classList.remove("selected"));
     option.classList.add("selected");
     const answer = stockScenarios[currentStockScenario].options[Number(option.dataset.stock)];
-    setImpact("stock", answer[2], {
-      title: `Stock: ${answer[1] ? "lectura correcta" : "lectura riesgosa"}`,
-      copy: option.textContent.trim(),
-    });
     document.querySelector("#stockFeedback").textContent = answer[1]
-      ? "Correcto: viste el patron y lo transformaste en accion."
-      : "Cuidado: esa lectura deja al proceso reaccionando tarde.";
+      ? "Correcto: viste el patron. Los KPIs quedan sin cambios porque aca solo estas diagnosticando."
+      : "Cuidado: esa lectura podria hacer reaccionar tarde al proceso. Los KPIs quedan sin cambios.";
   });
 
-  document.querySelector("#nextSupplyScenario").addEventListener("click", () => nextDecisionGame("supply"));
-  document.querySelector("#nextExecutiveScenario").addEventListener("click", () => nextDecisionGame("executive"));
-  document.querySelector("#nextSpikeScenario").addEventListener("click", () => nextDecisionGame("spike"));
-  document.querySelector("#nextMeetingScenario").addEventListener("click", () => nextDecisionGame("meeting"));
+  document.querySelector("#nextDecisionScenario").addEventListener("click", () => nextDecisionPractice());
 
-  ["supply", "executive", "spike", "meeting"].forEach((gameKey) => {
-    document.querySelector(decisionGames[gameKey].boardId).addEventListener("click", (event) => {
-      const option = event.target.closest("[data-decision]");
-      if (!option) return;
-      chooseDecisionGame(gameKey, Number(option.dataset.decision));
-    });
+  document.querySelector("#decisionBoard").addEventListener("click", (event) => {
+    const option = event.target.closest("[data-decision]");
+    if (!option) return;
+    chooseDecisionPractice(Number(option.dataset.decision));
   });
 
   document.querySelector("#quizOptions").addEventListener("click", (event) => {
@@ -1631,27 +1769,24 @@ function bindEvents() {
     const correct = selected === question.answer;
     document.querySelectorAll("#quizOptions .quiz-option").forEach((item) => item.classList.remove("selected", "correct", "wrong"));
     option.classList.add("selected", correct ? "correct" : "wrong");
+    if (!quizFirstAttempts.has(currentQuiz)) quizFirstAttempts.set(currentQuiz, correct);
     quizAnswered.add(currentQuiz);
-    setImpact("quiz", correct ? { sync: 3, accuracy: 2 } : { sync: -2, accuracy: -1 }, {
-      title: correct ? "Quiz: respuesta correcta" : "Quiz: respuesta incorrecta",
-      copy: question.explain,
-    });
+    updateQuizProgress();
     document.querySelector("#quizFeedback").textContent = correct
       ? `Correcto. ${question.explain}`
       : `No exactamente. ${question.explain}`;
-    setTimeout(() => {
-      currentQuiz = (currentQuiz + 1) % quizQuestions.length;
-      renderQuiz();
-    }, 900);
+    document.querySelector("#nextQuizQuestion").hidden = false;
   });
 
   document.querySelector("#resetQuiz").addEventListener("click", () => {
     currentQuiz = 0;
     quizAnswered = new Set();
-    setImpact("quiz", {}, {
-      title: "Quiz reiniciado",
-      copy: "Volviste al inicio del cuestionario S&OP.",
-    });
+    quizFirstAttempts = new Map();
+    renderQuiz();
+  });
+
+  document.querySelector("#nextQuizQuestion").addEventListener("click", () => {
+    currentQuiz = (currentQuiz + 1) % quizQuestions.length;
     renderQuiz();
   });
 
@@ -1673,6 +1808,10 @@ function bindEvents() {
 
   document.querySelector("#nextMasterMonth").addEventListener("click", () => {
     if (!masterHistory[masterMonth]) return;
+    if (masterMonth === masterMonths.length - 1) {
+      showSimulationCompleteModal(true);
+      return;
+    }
     masterMonth = Math.min(masterMonth + 1, masterMonths.length - 1);
     renderMasterSimulation();
   });
@@ -1681,28 +1820,30 @@ function bindEvents() {
     restartMasterSimulation();
   });
 
-  document.querySelector("#caseGrid").addEventListener("click", (event) => {
-    const card = event.target.closest("[data-story]");
-    if (!card) return;
-    currentStory = Number(card.dataset.story);
-    renderCases();
+  document.querySelector("#eventModalClose").addEventListener("click", () => {
+    closeConsequenceModal();
   });
 
-  document.querySelector("#storyStage").addEventListener("click", (event) => {
-    const choice = event.target.closest("[data-story-choice]");
-    if (!choice) return;
-    document.querySelectorAll("#storyStage .quiz-option").forEach((item) => item.classList.remove("selected"));
-    choice.classList.add("selected");
-    const selected = stories[currentStory].options[Number(choice.dataset.storyChoice)];
-    setImpact("story", selected[1], {
-      title: `Caso: ${stories[currentStory].title}`,
-      copy: selected[2],
-    });
-    document.querySelector("#storyFeedback").textContent = selected[2];
+  document.querySelector("#eventModal").addEventListener("click", (event) => {
+    if (event.target.id === "eventModal") closeConsequenceModal();
+  });
+
+  document.querySelector("#finalEvaluation").addEventListener("click", (event) => {
+    const chartToggle = event.target.closest("[data-chart-toggle]");
+    if (chartToggle) {
+      const key = chartToggle.dataset.chartToggle;
+      if (activeTimelineKpis.has(key)) activeTimelineKpis.delete(key);
+      else activeTimelineKpis.add(key);
+      renderTimelineChart();
+      return;
+    }
+    if (!event.target.closest("#showTimelineChart")) return;
+    activeTimelineKpis = new Set(["service", "margin", "cash", "cost", "risk"]);
+    renderTimelineChart();
   });
 
   document.querySelector("#resetGame").addEventListener("click", () => {
-    impacts = { gap: {}, stock: {}, supply: {}, executive: {}, spike: {}, meeting: {}, quiz: {}, story: {}, master: {} };
+    impacts = { gap: {}, stock: {}, master: {} };
     lastDecision = {
       title: "Dashboard reiniciado.",
       copy: "Volviste al estado base. Toma una decision para ver el impacto por KPI.",
@@ -1710,12 +1851,8 @@ function bindEvents() {
     };
     renderGapScenario();
     renderStockScenario();
-    renderDecisionGame("supply");
-    renderDecisionGame("executive");
-    renderDecisionGame("spike");
-    renderDecisionGame("meeting");
+    renderDecisionPractice();
     renderQuiz();
-    renderStoryStage();
     restartMasterSimulation();
     recalcState();
   });
@@ -1751,10 +1888,7 @@ renderJourney();
 renderDashboard();
 renderGapScenario();
 renderStockScenario();
-renderDecisionGame("supply");
-renderDecisionGame("executive");
-renderDecisionGame("spike");
-renderDecisionGame("meeting");
+renderDecisionPractice();
 renderQuiz();
 renderCases();
 renderQuickPrompts();

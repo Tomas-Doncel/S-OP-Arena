@@ -98,45 +98,21 @@
           <p class="eyebrow">Campo de entrenamiento</p>
           <h2>Mini simulaciones para practicar conceptos</h2>
           <p class="section-subtitle">
-            Cada decision modifica KPIs en tiempo real, guarda tu mejor score y muestra el costo del trade-off.
+            Forecast y stock modifican KPIs en tiempo real. La sala de decisiones y el quiz sirven para practicar criterio sin tocar el tablero.
           </p>
         </div>
 
-        <div class="dashboard mini-dashboard">
-          <div class="kpi-grid" id="kpiGrid"></div>
-          <div class="board-panel">
-            <div class="panel-header">
-              <h3>Estado del negocio</h3>
-              <button class="icon-button" id="resetGame" type="button" aria-label="Reiniciar dashboard" title="Reiniciar dashboard">↺</button>
+        <div class="training-layout">
+          <div class="training-play">
+            <div class="tabs" role="tablist" aria-label="Simuladores">
+              <button class="tab active" type="button" data-game="gap" role="tab" aria-selected="true">Forecast vs objetivo</button>
+              <button class="tab" type="button" data-game="stock" role="tab" aria-selected="false">Desafio de stock</button>
+              <button class="tab" type="button" data-game="decision" role="tab" aria-selected="false">Sala de decisiones</button>
+              <button class="tab" type="button" data-game="quiz" role="tab" aria-selected="false">Quiz S&OP</button>
             </div>
-            <div class="sync-meter">
-              <span>Sincronizacion</span>
-              <div class="meter-track"><div id="syncBar" class="meter-fill"></div></div>
-              <strong id="syncScore">72</strong>
-            </div>
-            <p id="boardNarrative" class="board-narrative">
-              El negocio tiene tension visible. Todavia hay espacio para decidir antes de ejecutar.
-            </p>
-            <div class="impact-panel" id="impactPanel">
-              <span>Ultima decision</span>
-              <p>Todavia no tomaste una decision. Cuando juegues, aca vas a ver que KPI se movio y por que.</p>
-              <div class="impact-list" id="impactList"></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="tabs" role="tablist" aria-label="Simuladores">
-          <button class="tab active" type="button" data-game="gap" role="tab" aria-selected="true">Forecast vs objetivo</button>
-          <button class="tab" type="button" data-game="stock" role="tab" aria-selected="false">Desafio de stock</button>
-          <button class="tab" type="button" data-game="supply" role="tab" aria-selected="false">Restricciones de supply</button>
-          <button class="tab" type="button" data-game="executive" role="tab" aria-selected="false">Decision ejecutiva</button>
-          <button class="tab" type="button" data-game="spike" role="tab" aria-selected="false">Pico de demanda</button>
-          <button class="tab" type="button" data-game="meeting" role="tab" aria-selected="false">Reunion S&OP</button>
-          <button class="tab" type="button" data-game="quiz" role="tab" aria-selected="false">Quiz S&OP</button>
-        </div>
-
-        <div class="game-shell">
-          <article class="game-panel active" id="game-gap">
+            <div class="game-shell">
+              <article class="game-panel active" id="game-gap">
             <div class="game-copy">
               <div class="game-topline">
                 <div>
@@ -157,16 +133,15 @@
               <div class="actions-list" id="gapActions"></div>
             </div>
             <div class="feedback" id="gapFeedback">Selecciona acciones. El board espera un plan, no deseos.</div>
-          </article>
+              </article>
 
-          <article class="game-panel" id="game-stock">
+              <article class="game-panel" id="game-stock">
             <div class="game-copy">
               <div class="game-topline">
                 <div>
                   <h3 id="stockTitle">Desafio de stock</h3>
                   <p id="stockBrief">
-                    Mira el comportamiento del stock y detecta que paso. La respuesta correcta
-                    mejora servicio y reduce urgencias.
+                    Mira el comportamiento del stock y elegi que accion tomarias. Si actuás, los KPIs se mueven.
                   </p>
                 </div>
                 <button class="scenario-button" id="nextStockScenario" type="button">Nuevo escenario</button>
@@ -187,72 +162,29 @@
               <div class="quiz-options" id="stockOptions"></div>
             </div>
             <div class="feedback" id="stockFeedback">Detecta el patron antes de correr a apagar el incendio.</div>
-          </article>
+              </article>
 
-          <article class="game-panel" id="game-supply">
+              <article class="game-panel" id="game-decision">
             <div class="game-copy">
               <div class="game-topline">
                 <div>
-                  <h3 id="supplyTitle">Restricciones de supply</h3>
-                  <p id="supplyBrief">Decidi como asignar capacidad limitada sin romper margen, servicio ni clientes clave.</p>
+                  <h3 id="decisionTitle">Sala de decisiones</h3>
+                  <p id="decisionBrief">Practicá criterio S&OP con restricciones, decisiones ejecutivas, picos de demanda y reuniones. Este juego no modifica KPIs.</p>
                 </div>
-                <button class="scenario-button" id="nextSupplyScenario" type="button">Nuevo escenario</button>
+                <button class="scenario-button" id="nextDecisionScenario" type="button">Nuevo escenario</button>
               </div>
             </div>
-            <div class="crisis-board" id="supplyBoard"></div>
-            <div class="feedback" id="supplyFeedback">La restriccion no bloquea la conversacion: la ordena.</div>
-          </article>
+            <div class="crisis-board" id="decisionBoard"></div>
+            <div class="feedback practice-feedback" id="decisionFeedback">Elegí una alternativa. Vas a recibir feedback conceptual, sin mover el tablero.</div>
+              </article>
 
-          <article class="game-panel" id="game-executive">
-            <div class="game-copy">
-              <div class="game-topline">
-                <div>
-                  <h3 id="executiveTitle">Decision ejecutiva</h3>
-                  <p id="executiveBrief">Tomá una decision de liderazgo con objetivos contrapuestos visibles.</p>
-                </div>
-                <button class="scenario-button" id="nextExecutiveScenario" type="button">Nuevo escenario</button>
-              </div>
-            </div>
-            <div class="crisis-board" id="executiveBoard"></div>
-            <div class="feedback" id="executiveFeedback">Liderar es decidir que se protege y que costo se acepta.</div>
-          </article>
-
-          <article class="game-panel" id="game-spike">
-            <div class="game-copy">
-              <div class="game-topline">
-                <div>
-                  <h3 id="spikeTitle">Pico de demanda</h3>
-                  <p id="spikeBrief">Una señal de demanda cambia de golpe. Reaccioná rapido sin sobreactuar.</p>
-                </div>
-                <button class="scenario-button" id="nextSpikeScenario" type="button">Nuevo escenario</button>
-              </div>
-            </div>
-            <div class="crisis-board" id="spikeBoard"></div>
-            <div class="feedback" id="spikeFeedback">No toda señal exige producir todo: primero lee probabilidad e impacto.</div>
-          </article>
-
-          <article class="game-panel" id="game-meeting">
-            <div class="game-copy">
-              <div class="game-topline">
-                <div>
-                  <h3 id="meetingTitle">Reunion S&OP</h3>
-                  <p id="meetingBrief">Convertí conflicto funcional en un solo plan con decisiones, responsables y premisas.</p>
-                </div>
-                <button class="scenario-button" id="nextMeetingScenario" type="button">Nuevo escenario</button>
-              </div>
-            </div>
-            <div class="crisis-board" id="meetingBoard"></div>
-            <div class="feedback" id="meetingFeedback">Una buena reunion termina con decisiones claras, no con mas dudas.</div>
-          </article>
-
-          <article class="game-panel" id="game-quiz">
+              <article class="game-panel" id="game-quiz">
             <div class="game-copy">
               <div class="game-topline">
                 <div>
                   <h3>S&OP Quiz</h3>
                   <p>
-                    Responde preguntas del proceso S&OP. Cada respuesta correcta mejora sincronizacion,
-                    accuracy y calidad de decision.
+                    Responde preguntas del proceso S&OP. El quiz mide aprendizaje conceptual y no modifica KPIs.
                   </p>
                 </div>
                 <button class="scenario-button" id="resetQuiz" type="button">Reiniciar quiz</button>
@@ -264,7 +196,33 @@
               <div class="quiz-options" id="quizOptions"></div>
             </div>
             <div class="feedback" id="quizFeedback">Elegí una respuesta para empezar.</div>
-          </article>
+            <button class="scenario-button quiz-next" id="nextQuizQuestion" type="button" hidden>Siguiente pregunta</button>
+              </article>
+            </div>
+          </div>
+
+          <aside class="dashboard mini-dashboard">
+            <div class="kpi-grid" id="kpiGrid"></div>
+            <div class="board-panel">
+              <div class="panel-header">
+                <h3>Estado del negocio</h3>
+                <button class="icon-button" id="resetGame" type="button" aria-label="Reiniciar dashboard" title="Reiniciar dashboard">↺</button>
+              </div>
+              <div class="sync-meter">
+                <span>Sincronizacion</span>
+                <div class="meter-track"><div id="syncBar" class="meter-fill"></div></div>
+                <strong id="syncScore">72</strong>
+              </div>
+              <p id="boardNarrative" class="board-narrative">
+                El negocio tiene tension visible. Todavia hay espacio para decidir antes de ejecutar.
+              </p>
+              <div class="impact-panel" id="impactPanel">
+                <span>Ultima decision</span>
+                <p>Todavia no tomaste una decision. Forecast y stock van a mostrar aca que KPI se movio y por que.</p>
+                <div class="impact-list" id="impactList"></div>
+              </div>
+            </div>
+          </aside>
         </div>
       </section>
 
@@ -284,14 +242,15 @@
               <strong id="masterScore">0</strong>
             </div>
           </div>
+          <div class="master-kpi-grid" id="masterKpiGrid"></div>
           <div class="master-grid">
             <article class="month-card" id="monthCard"></article>
             <aside class="signal-panel">
-              <h3>Business signals</h3>
+              <h3>Señales del negocio</h3>
               <div class="signal-list" id="signalList"></div>
-              <div class="delayed-box">
-                <span>Consecuencias diferidas</span>
-                <p id="delayedConsequences">Todavia no hay impactos futuros acumulados.</p>
+              <div class="delayed-box" id="delayedBox">
+                <span>Alertas y consecuencias</span>
+                <div id="delayedConsequences">Todavia no hay impactos futuros acumulados.</div>
               </div>
             </aside>
           </div>
@@ -300,6 +259,14 @@
             <button class="primary-action" id="nextMasterMonth" type="button">Avanzar mes</button>
           </div>
           <article class="final-evaluation" id="finalEvaluation"></article>
+        </div>
+        <div class="event-modal" id="eventModal" aria-hidden="true">
+          <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+            <button class="event-modal-close" id="eventModalClose" type="button" aria-label="Cerrar alerta">×</button>
+            <p class="eyebrow" id="eventModalKind">Alerta</p>
+            <h3 id="eventModalTitle">Consecuencia activada</h3>
+            <p id="eventModalCopy"></p>
+          </div>
         </div>
       </section>
 
@@ -311,10 +278,8 @@
             Errores, crisis y decisiones reales en formato narrativo. La teoria se recuerda mejor cuando tiene tension.
           </p>
         </div>
-        <div class="story-layout">
-          <div class="case-grid" id="caseGrid"></div>
-          <article class="story-stage" id="storyStage" aria-live="polite"></article>
-        </div>
+        <div class="real-stories" id="caseGrid"></div>
+        <article class="story-stage story-stage-hidden" id="storyStage" aria-hidden="true"></article>
       </section>
 
       <section id="ai" class="section ai-section">
