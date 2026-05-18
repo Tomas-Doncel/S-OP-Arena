@@ -13,15 +13,17 @@
         <span>S&OP Arena</span>
       </a>
       <nav class="nav-links" aria-label="Navegacion principal">
+        <a href="#home">Home</a>
         <a href="#journey">Journey</a>
         <a href="#simulators">Mini juegos</a>
+        <a href="#master">Simulacion</a>
         <a href="#cases">Casos</a>
         <a href="#ai">IA</a>
       </nav>
     </header>
 
     <main>
-      <section id="home" class="hero">
+      <section id="home" class="page hero active">
         <div class="hero-visual" aria-hidden="true">
           <div class="sop-flow">
             <div class="flow-header">
@@ -66,6 +68,20 @@
               </div>
             </div>
           </div>
+          <div class="home-visual-strip">
+            <div class="visual-card">
+              <span>Participantes</span>
+              <strong>Ventas · Marketing · Supply · Finanzas · Board</strong>
+            </div>
+            <div class="visual-card">
+              <span>Flujo mensual</span>
+              <strong>Senales → Reviews → Decisiones → Un plan</strong>
+            </div>
+            <div class="visual-card">
+              <span>Trade-offs</span>
+              <strong>Servicio · Margen · Cash · Riesgo · Cliente</strong>
+            </div>
+          </div>
         </div>
         <div class="hero-copy">
           <p class="eyebrow">Supply Chain Leadership Lab</p>
@@ -80,9 +96,31 @@
             <a class="secondary-action" href="#journey">Ver roadmap</a>
           </div>
         </div>
+        <div class="page-end hero-end">
+          <div>
+            <p class="eyebrow">Proximo paso</p>
+            <h3>Entender el proceso antes de jugarlo.</h3>
+            <p>La ruta de aprendizaje te da el lenguaje base para que cada decision tenga sentido de negocio.</p>
+          </div>
+          <a class="primary-action" href="#journey">Ir al Journey</a>
+        </div>
       </section>
 
-      <section id="journey" class="section journey-section">
+      <section id="journey" class="page section journey-section">
+        <div class="page-banner">
+          <div class="banner-slide">
+            <span>Activity Review</span>
+            <strong>Actividades, promociones y supuestos comerciales.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Demand Review</span>
+            <strong>Forecast probable, gaps visibles y escenarios.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>S&OP Ejecutivo</span>
+            <strong>Trade-offs decididos con impacto en KPIs.</strong>
+          </div>
+        </div>
         <div class="section-heading">
           <p class="eyebrow">Ruta de aprendizaje</p>
           <h2>Primero teoria, despues presion</h2>
@@ -91,14 +129,36 @@
           </p>
         </div>
         <div class="roadmap" id="roadmap"></div>
+        <div class="page-end">
+          <div>
+            <p class="eyebrow">Cuando ya tenes la base</p>
+            <h3>Pasá de conceptos a decisiones cortas.</h3>
+            <p>Practica forecast, stock, criterios ejecutivos y preguntas clave antes de entrar a la simulacion completa.</p>
+          </div>
+          <a class="primary-action" href="#simulators">Ir a mini juegos</a>
+        </div>
       </section>
 
-      <section id="simulators" class="section simulators-section">
+      <section id="simulators" class="page section simulators-section">
+        <div class="page-banner simulators-banner">
+          <div class="banner-slide">
+            <span>Forecast vs objetivo</span>
+            <strong>Acciones reales para cerrar GAP sin maquillar el numero.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Stock Challenge</span>
+            <strong>Lectura de patrones antes de reaccionar tarde.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Quiz S&OP</span>
+            <strong>Preguntas cortas para fijar conceptos clave.</strong>
+          </div>
+        </div>
         <div class="section-heading">
           <p class="eyebrow">Campo de entrenamiento</p>
           <h2>Mini simulaciones para practicar conceptos</h2>
           <p class="section-subtitle">
-            Forecast y stock modifican KPIs en tiempo real. La sala de decisiones y el quiz sirven para practicar criterio sin tocar el tablero.
+            Forecast modifica KPIs en tiempo real. Stock, sala de decisiones y quiz sirven para practicar diagnostico y criterio sin tocar el tablero.
           </p>
         </div>
 
@@ -141,7 +201,7 @@
                 <div>
                   <h3 id="stockTitle">Desafio de stock</h3>
                   <p id="stockBrief">
-                    Mira el comportamiento del stock y elegi que accion tomarias. Si actuás, los KPIs se mueven.
+                    Mira el comportamiento del stock y elegi la lectura correcta. Este desafio entrena diagnostico sin mover KPIs.
                   </p>
                 </div>
                 <button class="scenario-button" id="nextStockScenario" type="button">Nuevo escenario</button>
@@ -218,15 +278,37 @@
               </p>
               <div class="impact-panel" id="impactPanel">
                 <span>Ultima decision</span>
-                <p>Todavia no tomaste una decision. Forecast y stock van a mostrar aca que KPI se movio y por que.</p>
+                <p>Todavia no tomaste una decision. Forecast va a mostrar aca que KPI se movio y por que.</p>
                 <div class="impact-list" id="impactList"></div>
               </div>
             </div>
           </aside>
         </div>
+        <div class="page-end">
+          <div>
+            <p class="eyebrow">Siguiente nivel</p>
+            <h3>Ahora conectá las decisiones en el tiempo.</h3>
+            <p>El simulador maestro toma lo aprendido y lo convierte en seis meses de consecuencias acumuladas.</p>
+          </div>
+          <a class="primary-action" href="#master">Ir a simulacion</a>
+        </div>
       </section>
 
-      <section id="master" class="section master-section">
+      <section id="master" class="page section master-section">
+        <div class="page-banner master-banner">
+          <div class="banner-slide">
+            <span>Mes 1-2</span>
+            <strong>Plan estable, promocion y primeras decisiones de negocio.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Mes 3-4</span>
+            <strong>Falla de proveedor, cash e inventario bajo presion.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Mes 5-6</span>
+            <strong>Cliente inesperado, transporte y consecuencias acumuladas.</strong>
+          </div>
+        </div>
         <div class="section-heading">
           <p class="eyebrow">Simulacion maestra S&OP</p>
           <h2>Dirigi el negocio</h2>
@@ -260,6 +342,14 @@
           </div>
           <article class="final-evaluation" id="finalEvaluation"></article>
         </div>
+        <div class="page-end">
+          <div>
+            <p class="eyebrow">Despues de dirigir</p>
+            <h3>Miralo desde historias reales.</h3>
+            <p>Los casos ayudan a reconocer patrones: promesas, restricciones, crisis y liderazgo bajo presion.</p>
+          </div>
+          <a class="primary-action" href="#cases">Ir a casos</a>
+        </div>
         <div class="event-modal" id="eventModal" aria-hidden="true">
           <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
             <button class="event-modal-close" id="eventModalClose" type="button" aria-label="Cerrar alerta">×</button>
@@ -270,7 +360,21 @@
         </div>
       </section>
 
-      <section id="cases" class="section cases-section">
+      <section id="cases" class="page section cases-section">
+        <div class="page-banner cases-banner">
+          <div class="banner-slide">
+            <span>Crisis reales</span>
+            <strong>Cuando el proceso se prueba bajo presion.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Errores de planning</span>
+            <strong>Forecast, stock y promesas que dejan aprendizajes.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Liderazgo</span>
+            <strong>Decidir claro cuando ningun KPI cuenta toda la historia.</strong>
+          </div>
+        </div>
         <div class="section-heading">
           <p class="eyebrow">Historias reales de Supply Chain</p>
           <h2>Historias para pensar como lider</h2>
@@ -280,9 +384,31 @@
         </div>
         <div class="real-stories" id="caseGrid"></div>
         <article class="story-stage story-stage-hidden" id="storyStage" aria-hidden="true"></article>
+        <div class="page-end">
+          <div>
+            <p class="eyebrow">Nueva capa</p>
+            <h3>Usá IA para mejorar la calidad del proceso.</h3>
+            <p>El copiloto no decide por vos: ayuda a detectar sesgos, ordenar premisas y acelerar escenarios.</p>
+          </div>
+          <a class="primary-action" href="#ai">Ir a IA aplicada</a>
+        </div>
       </section>
 
-      <section id="ai" class="section ai-section">
+      <section id="ai" class="page section ai-section">
+        <div class="page-banner ai-banner">
+          <div class="banner-slide">
+            <span>Forecasting IA</span>
+            <strong>Deteccion de senales, anomalias y sesgos.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Copilotos S&OP</span>
+            <strong>Preguntas mejores, minutas claras y escenarios accionables.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Decision intelligence</span>
+            <strong>Menos reporte manual, mas criterio de negocio.</strong>
+          </div>
+        </div>
         <div class="section-heading">
           <p class="eyebrow">IA aplicada</p>
           <h2>Menos energia en reportar, mas energia en decidir</h2>
@@ -317,6 +443,14 @@
             <input id="chatInput" type="text" autocomplete="off" placeholder="Ej: Tengo forecast 93 y target 100, que hago?" />
             <button type="submit">Enviar</button>
           </form>
+        </div>
+        <div class="page-end">
+          <div>
+            <p class="eyebrow">Cierre del recorrido</p>
+            <h3>Volvé al tablero cuando quieras practicar otra decision.</h3>
+            <p>La gracia de S&OP Arena es repetir: probar, equivocarse, leer KPIs y volver a decidir mejor.</p>
+          </div>
+          <a class="primary-action" href="#simulators">Volver a practicar</a>
         </div>
       </section>
     </main>

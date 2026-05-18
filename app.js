@@ -5,6 +5,111 @@ const quotes = [
   "El GAP se gestiona. No se esconde.",
 ];
 
+const rotatingVisuals = {
+  home: [
+    [
+      ["Participantes", "Ventas · Marketing · Supply · Finanzas · Board"],
+      ["Flujo mensual", "Senales → Reviews → Decisiones → Un plan"],
+      ["Trade-offs", "Servicio · Margen · Cash · Riesgo · Cliente"],
+    ],
+    [
+      ["Decision room", "Un mismo numero, multiples impactos"],
+      ["Down - Top", "Estrategia baja, realidad operativa sube"],
+      ["One Process", "Menos silos, mas decisiones visibles"],
+    ],
+    [
+      ["Executive S&OP", "El board destraba prioridades y costos"],
+      ["Supply reality", "Capacidad, materiales, transporte y restricciones"],
+      ["Demand signal", "Promos, clientes, sesgos y escenarios"],
+    ],
+  ],
+  journey: [
+    [
+      ["Activity Review", "Actividades, promociones y supuestos comerciales."],
+      ["Demand Review", "Forecast probable, gaps visibles y escenarios."],
+      ["S&OP Ejecutivo", "Trade-offs decididos con impacto en KPIs."],
+    ],
+    [
+      ["Forecast vs Target", "Separar lo probable de lo deseado."],
+      ["KPIs", "Entender si una mejora mueve el problema."],
+      ["Leadership", "Preguntas incomodas antes de ejecutar."],
+    ],
+    [
+      ["Trade-offs", "Servicio, costo, cash, margen y riesgo."],
+      ["Supply Review", "Convertir deseo comercial en plan ejecutable."],
+      ["Decision pressure", "Decidir con informacion incompleta y tiempo real."],
+    ],
+  ],
+  simulators: [
+    [
+      ["Forecast vs objetivo", "Acciones reales para cerrar GAP sin maquillar el numero."],
+      ["Stock Challenge", "Lectura de patrones antes de reaccionar tarde."],
+      ["Quiz S&OP", "Preguntas cortas para fijar conceptos clave."],
+    ],
+    [
+      ["KPIs vivos", "Cada accion de forecast muestra costo y beneficio."],
+      ["Diagnostico", "Stock entrena lectura, no decision impulsiva."],
+      ["Criterio", "La sala de decisiones fuerza trade-offs."],
+    ],
+    [
+      ["Replay", "Volver a probar cambia la lectura del negocio."],
+      ["Feedback", "Cada respuesta explica el por que."],
+      ["Score", "El aprendizaje se mide por precision conceptual."],
+    ],
+  ],
+  master: [
+    [
+      ["Mes 1-2", "Plan estable, promocion y primeras decisiones de negocio."],
+      ["Mes 3-4", "Falla de proveedor, cash e inventario bajo presion."],
+      ["Mes 5-6", "Cliente inesperado, transporte y consecuencias acumuladas."],
+    ],
+    [
+      ["Impactos diferidos", "Una decision buena o mala vuelve meses despues."],
+      ["Alertas", "El simulador avisa cuando aparece una consecuencia."],
+      ["Scorecard", "Servicio, margen, cash, costo y riesgo."],
+    ],
+    [
+      ["CEO pressure", "El negocio pide resultado sin esperar certeza perfecta."],
+      ["Customer voice", "El cliente siente las promesas incumplidas."],
+      ["Finance lens", "Volumen sin margen no siempre es una victoria."],
+    ],
+  ],
+  cases: [
+    [
+      ["Crisis reales", "Cuando el proceso se prueba bajo presion."],
+      ["Errores de planning", "Forecast, stock y promesas que dejan aprendizajes."],
+      ["Liderazgo", "Decidir claro cuando ningun KPI cuenta toda la historia."],
+    ],
+    [
+      ["Promesa comercial", "Vender sin supply termina en costo o cliente herido."],
+      ["Stock escondido", "El exceso tambien puede ser una crisis silenciosa."],
+      ["Calidad", "Cumplir el numero no justifica romper confianza."],
+    ],
+    [
+      ["Reunion dificil", "El conflicto funcional puede ordenar el plan."],
+      ["Leccion", "La crisis suele mostrar una premisa que faltaba."],
+      ["Reflexion", "El mejor proceso aprende despues del golpe."],
+    ],
+  ],
+  ai: [
+    [
+      ["Forecasting IA", "Deteccion de senales, anomalias y sesgos."],
+      ["Copilotos S&OP", "Preguntas mejores, minutas claras y escenarios accionables."],
+      ["Decision intelligence", "Menos reporte manual, mas criterio de negocio."],
+    ],
+    [
+      ["Demand sensing", "Senales externas para reaccionar antes."],
+      ["Anomaly detection", "Alertas cuando el patron deja de ser normal."],
+      ["Inventory AI", "Cobertura correcta para servicio y cash."],
+    ],
+    [
+      ["Premisas", "IA ayuda a encontrar supuestos sin dueno."],
+      ["Escenarios", "Triggers, riesgos y alternativas mejor ordenadas."],
+      ["Copiloto", "No decide: hace mejores preguntas."],
+    ],
+  ],
+};
+
 const lessons = [
   {
     num: "01",
@@ -1696,7 +1801,22 @@ function renderQuickPrompts() {
     .join("");
 }
 
+function showPageFromHash() {
+  const pages = [...document.querySelectorAll(".page")];
+  const validIds = pages.map((page) => page.id);
+  const requested = window.location.hash.replace("#", "") || "home";
+  const activeId = validIds.includes(requested) ? requested : "home";
+  pages.forEach((page) => page.classList.toggle("active", page.id === activeId));
+  document.querySelectorAll(".nav-links a, .hero-actions a, .lesson-unlock a").forEach((link) => {
+    const target = link.getAttribute("href")?.replace("#", "");
+    link.classList.toggle("active", target === activeId);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function bindEvents() {
+  window.addEventListener("hashchange", showPageFromHash);
+
   document.querySelector("#roadmap").addEventListener("click", (event) => {
     const step = event.target.closest("[data-lesson]");
     if (!step) return;
@@ -1884,6 +2004,33 @@ function rotateQuotes() {
   }, 2600);
 }
 
+function applyVisualSet(pageId, setIndex) {
+  const page = document.querySelector(`#${pageId}`);
+  const visualSet = rotatingVisuals[pageId]?.[setIndex];
+  if (!page || !visualSet) return;
+  const cards = page.querySelectorAll(".visual-card, .banner-slide");
+  cards.forEach((card, index) => {
+    const content = visualSet[index];
+    if (!content) return;
+    card.classList.add("visual-refreshing");
+    setTimeout(() => {
+      card.querySelector("span").textContent = content[0];
+      card.querySelector("strong").textContent = content[1];
+      card.classList.remove("visual-refreshing");
+    }, 180);
+  });
+}
+
+function rotatePageVisuals() {
+  const indexes = Object.fromEntries(Object.keys(rotatingVisuals).map((key) => [key, 0]));
+  setInterval(() => {
+    Object.keys(rotatingVisuals).forEach((pageId) => {
+      indexes[pageId] = (indexes[pageId] + 1) % rotatingVisuals[pageId].length;
+      applyVisualSet(pageId, indexes[pageId]);
+    });
+  }, 3800);
+}
+
 renderJourney();
 renderDashboard();
 renderGapScenario();
@@ -1894,5 +2041,7 @@ renderCases();
 renderQuickPrompts();
 renderMasterSimulation();
 bindEvents();
+showPageFromHash();
 rotateQuotes();
+rotatePageVisuals();
 recalcState();
