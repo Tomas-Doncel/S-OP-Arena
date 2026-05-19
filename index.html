@@ -15,6 +15,7 @@
       <nav class="nav-links" aria-label="Navegacion principal">
         <a href="#home">Home</a>
         <a href="#journey">Journey</a>
+        <a href="#crossword">Crossword</a>
         <a href="#simulators">Mini juegos</a>
         <a href="#master">Simulacion</a>
         <a href="#cases">Casos</a>
@@ -109,6 +110,7 @@
           </div>
           <a class="primary-action" href="#journey">Ir al Journey</a>
         </div>
+        <div class="progression-map" id="progressionMap"></div>
       </section>
 
       <aside class="progress-dashboard" id="progressDashboard" aria-live="polite">
@@ -129,6 +131,7 @@
           <div><span>Modulos teoria</span><strong id="progressLessons">0/9</strong></div>
           <div><span>Mejor simulacion</span><strong id="progressSimulation">0</strong></div>
         </div>
+        <div class="daily-status" id="dailyStatus"></div>
         <div class="badge-shelf" id="badgeShelf"></div>
         <div class="best-score-row" id="progressBestScores"></div>
         <button class="reset-progress" id="resetProgress" type="button">Reset Progress</button>
@@ -172,6 +175,61 @@
             <p class="eyebrow">Cuando ya tenes la base</p>
             <h3>Pasá de conceptos a decisiones cortas.</h3>
             <p>Practica forecast, stock, criterios ejecutivos y preguntas clave antes de entrar a la simulacion completa.</p>
+          </div>
+          <a class="primary-action" href="#simulators">Ir a mini juegos</a>
+        </div>
+      </section>
+
+      <section id="crossword" class="page section crossword-section">
+        <div class="page-banner crossword-banner">
+          <div class="banner-slide">
+            <span>Daily challenge</span>
+            <strong>Un nuevo crucigrama de Supply Chain cada dia.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Terminologia</span>
+            <strong>Forecast, inventario, KPIs, logistica, IA y liderazgo.</strong>
+          </div>
+          <div class="banner-slide">
+            <span>Streak</span>
+            <strong>Volver todos los dias mueve la barra de progreso.</strong>
+          </div>
+        </div>
+        <div class="section-heading">
+          <p class="eyebrow">Daily Supply Chain Crossword</p>
+          <h2>Un desafio diario para fijar vocabulario</h2>
+          <p class="section-subtitle">
+            Completa 20 conceptos de Supply Chain y S&OP. El contenido se renueva despues de medianoche y el XP se reclama una sola vez por dia.
+          </p>
+        </div>
+        <div class="crossword-shell">
+          <div>
+            <div class="crossword-topline">
+              <div>
+                <h3 id="crosswordTitle">Crossword diario</h3>
+                <p id="crosswordMeta">20 palabras · progreso diario</p>
+              </div>
+              <div class="crossword-timer" id="crosswordTimer">00:00</div>
+            </div>
+            <div class="crossword-grid" id="crosswordGrid" aria-label="Daily Supply Chain Crossword"></div>
+            <div class="crossword-feedback" id="crosswordFeedback">Selecciona una pista y empeza a escribir.</div>
+          </div>
+          <aside class="crossword-clues">
+            <div>
+              <h3>Horizontales</h3>
+              <div id="acrossClues"></div>
+            </div>
+            <div>
+              <h3>Verticales</h3>
+              <div id="downClues"></div>
+            </div>
+          </aside>
+        </div>
+        <div class="page-end">
+          <div>
+            <p class="eyebrow">Despues del challenge</p>
+            <h3>Usa los conceptos en decisiones cortas.</h3>
+            <p>El crossword refuerza vocabulario; los mini juegos lo convierten en criterio de negocio.</p>
           </div>
           <a class="primary-action" href="#simulators">Ir a mini juegos</a>
         </div>

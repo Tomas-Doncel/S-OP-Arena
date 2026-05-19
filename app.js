@@ -159,6 +159,7 @@ const heroVisualSlides = [
 ];
 
 const progressKey = "sopArenaProgress_v3";
+const dailyKey = "sopArenaDaily_v1";
 const coreMiniGames = ["forecast", "stock", "supply", "executive", "spike", "meeting"];
 const levels = [
   { name: "Junior Planner", xp: 0, lessons: 0, miniGames: 0, simulationScore: 0 },
@@ -181,6 +182,155 @@ const badges = [
   { name: "SC Director Mindset", icon: "♛", description: "Alcanzaste pensamiento ejecutivo de Supply Chain." },
 ];
 
+const crosswordWordPool = [
+  ["FORECAST", "Estimacion de demanda futura basada en datos y premisas."],
+  ["INVENTORY", "Stock disponible para cubrir demanda y variabilidad."],
+  ["LEADTIME", "Tiempo entre ordenar y recibir o producir."],
+  ["PROCUREMENT", "Proceso de abastecimiento y compra."],
+  ["WAREHOUSE", "Punto fisico donde se almacena producto."],
+  ["DISTRIBUTION", "Movimiento de producto hacia clientes o canales."],
+  ["SUPPLIER", "Proveedor que entrega materiales o servicios."],
+  ["CAPACITY", "Limite de produccion o ejecucion disponible."],
+  ["REPLENISHMENT", "Reposicion para recuperar cobertura."],
+  ["BOTTLENECK", "Restriccion que limita el flujo total."],
+  ["ALIGNMENT", "Coordinacion entre areas sobre un mismo plan."],
+  ["CONSENSUS", "Acuerdo funcional sobre premisas y decisiones."],
+  ["TRADEOFF", "Decision que protege un objetivo y acepta un costo."],
+  ["BASELINE", "Demanda esperada antes de eventos o acciones."],
+  ["BIAS", "Error sistematico en una direccion."],
+  ["DEMAND", "Necesidad esperada o real del mercado."],
+  ["SUPPLY", "Capacidad y recursos para cumplir demanda."],
+  ["EXECUTIVE", "Nivel donde se deciden trade-offs de negocio."],
+  ["ONEPLAN", "Unico plan compartido por toda la organizacion."],
+  ["SAFETYSTOCK", "Buffer para absorber variabilidad."],
+  ["CYCLESTOCK", "Inventario usado entre reposiciones."],
+  ["STOCKOUT", "Quiebre por falta de disponibilidad."],
+  ["SERVICE", "Cumplimiento de la promesa al cliente."],
+  ["BUFFER", "Proteccion contra variabilidad."],
+  ["FILLRATE", "Porcentaje de demanda cubierta desde stock."],
+  ["REORDERPOINT", "Nivel que dispara una reposicion."],
+  ["MARGIN", "Rentabilidad despues de costos relevantes."],
+  ["CASHFLOW", "Flujo de caja disponible para operar."],
+  ["OTIF", "Entrega a tiempo y completa."],
+  ["WASTE", "Perdida por exceso, vencimiento o mala ejecucion."],
+  ["RISK", "Probabilidad e impacto de eventos negativos."],
+  ["LOGISTICS", "Gestion de transporte, almacenamiento y flujo fisico."],
+  ["TRANSPORT", "Movimiento fisico de productos."],
+  ["NETWORK", "Estructura de nodos, rutas y capacidades."],
+  ["RESILIENCE", "Capacidad de absorber shocks operativos."],
+  ["OWNERSHIP", "Responsabilidad clara sobre una decision."],
+  ["ESCALATION", "Subir una decision al nivel correcto."],
+  ["COLLABORATION", "Trabajo coordinado entre funciones."],
+  ["INFLUENCE", "Capacidad de mover decisiones sin autoridad directa."],
+  ["NEGOTIATION", "Gestion de acuerdos entre objetivos en conflicto."],
+  ["AUTOMATION", "Uso de tecnologia para ejecutar tareas repetibles."],
+  ["PREDICTIVE", "Capacidad de anticipar eventos futuros."],
+  ["OPTIMIZATION", "Busqueda del mejor balance entre restricciones."],
+  ["ANALYTICS", "Uso de datos para entender y decidir."],
+  ["COPILOT", "Asistente digital para ordenar analisis y decisiones."],
+  ["SIMULATION", "Modelo para probar escenarios antes de ejecutar."],
+  ["SCENARIO", "Version posible del futuro con premisas propias."],
+  ["TRIGGER", "Condicion que activa una accion."],
+  ["PREMISE", "Supuesto que explica un numero o decision."],
+  ["CONSTRAINT", "Limite que condiciona el plan."],
+  ["VARIABILITY", "Cambio natural o incierto de demanda o supply."],
+  ["VOLATILITY", "Inestabilidad que dificulta planificar."],
+  ["PRIORITY", "Orden elegido cuando no se puede cumplir todo."],
+  ["QUALITY", "Condicion de producto apto para cliente."],
+  ["SHORTAGE", "Falta de material o producto."],
+  ["OVERSTOCK", "Exceso de inventario frente a demanda."],
+  ["BACKLOG", "Pedido pendiente de entregar."],
+  ["CHANNEL", "Ruta comercial o cliente agrupado."],
+  ["PROMOTION", "Actividad comercial que altera demanda."],
+  ["LAUNCH", "Introduccion de producto al mercado."],
+  ["PORTFOLIO", "Conjunto de productos gestionados."],
+  ["SKU", "Unidad especifica de producto."],
+  ["PLANNER", "Rol que integra datos, premisas y decisiones."],
+  ["DIRECTOR", "Rol ejecutivo que acepta trade-offs mayores."],
+  ["DASHBOARD", "Vista de KPIs para seguimiento."],
+  ["ANOMALY", "Dato o patron fuera de lo esperado."],
+  ["SENSING", "Lectura temprana de senales de mercado."],
+  ["PLANNING", "Proceso de anticipar y coordinar acciones."],
+  ["EXECUTION", "Ejecucion real del plan definido."],
+  ["REVIEW", "Instancia de analisis y decision."],
+  ["MEETING", "Espacio de alineacion, si deriva en decisiones."],
+  ["TARGET", "Objetivo aspiracional del negocio."],
+  ["GAP", "Diferencia entre forecast y target o capacidad."],
+  ["BALANCE", "Estado donde KPIs y riesgos estan compensados."],
+  ["CUSTOMER", "Cliente afectado por decisiones de servicio."],
+  ["FINANCE", "Funcion que traduce volumen a valor."],
+  ["PRODUCTION", "Transformacion de materiales en producto."],
+  ["MATERIAL", "Insumo necesario para producir."],
+  ["SOURCE", "Origen de abastecimiento."],
+  ["ROUTE", "Camino logistico elegido."],
+  ["NODE", "Punto de red logistico o productivo."],
+  ["COST", "Recurso economico consumido por una accion."],
+  ["VALUE", "Resultado de negocio generado por el plan."],
+  ["DECISION", "Eleccion explicita con consecuencias."],
+  ["LEADERSHIP", "Capacidad de decidir y alinear bajo presion."],
+];
+
+const crosswordRoots = [
+  ["DEMAND", "demanda"],
+  ["SUPPLY", "supply"],
+  ["FORECAST", "forecast"],
+  ["TARGET", "target"],
+  ["GAP", "gap"],
+  ["STOCK", "stock"],
+  ["INVENTORY", "inventario"],
+  ["SERVICE", "servicio"],
+  ["MARGIN", "margen"],
+  ["CASH", "cash"],
+  ["RISK", "riesgo"],
+  ["COST", "costo"],
+  ["CAPACITY", "capacidad"],
+  ["SUPPLIER", "proveedores"],
+  ["CUSTOMER", "clientes"],
+  ["CHANNEL", "canales"],
+  ["PORTFOLIO", "portfolio"],
+  ["PROMO", "promociones"],
+  ["QUALITY", "calidad"],
+  ["TRANSPORT", "transporte"],
+  ["NETWORK", "red logistico-productiva"],
+  ["FINANCE", "finanzas"],
+  ["SALES", "ventas"],
+  ["OPS", "operaciones"],
+  ["SOP", "S&OP"],
+  ["LEADER", "liderazgo"],
+  ["AI", "inteligencia artificial"],
+  ["DATA", "datos"],
+];
+
+const crosswordDimensions = [
+  ["PLAN", "Plan usado para coordinar {label} con el resto del negocio."],
+  ["REVIEW", "Instancia donde se revisa {label} con premisas, riesgos y acciones."],
+  ["BIAS", "Sesgo o distorsion que puede afectar las decisiones sobre {label}."],
+  ["RISK", "Exposicion que debe hacerse visible al decidir sobre {label}."],
+  ["KPI", "Indicador que permite evaluar el desempeno de {label}."],
+  ["GAP", "Diferencia relevante que exige accion sobre {label}."],
+  ["FLOW", "Flujo que conecta {label} con ejecucion, clientes y resultados."],
+  ["CYCLE", "Ciclo de gestion usado para revisar y mejorar {label}."],
+  ["MODEL", "Representacion analitica para decidir mejor sobre {label}."],
+  ["SIGNAL", "Senal temprana que ayuda a anticipar cambios en {label}."],
+  ["ALERT", "Aviso que indica que {label} requiere atencion o escalacion."],
+  ["ACTION", "Decision concreta para mover {label} hacia el plan acordado."],
+  ["TRADEOFF", "Tension de negocio que aparece al optimizar {label}."],
+  ["BUFFER", "Proteccion operativa para absorber variabilidad en {label}."],
+  ["VALUE", "Contribucion de {label} al resultado economico del negocio."],
+  ["SYNC", "Sincronizacion necesaria para que {label} no quede aislado."],
+  ["CONTROL", "Mecanismo para monitorear {label} y corregir desvio."],
+  ["SCENARIO", "Version posible del futuro usada para probar {label}."],
+];
+
+crosswordDimensions.forEach(([suffix, clueTemplate]) => {
+  crosswordRoots.forEach(([root, label]) => {
+    const word = `${root}${suffix}`.replace(/[^A-Z]/g, "");
+    if (word.length <= 22 && !crosswordWordPool.some(([existing]) => existing === word)) {
+      crosswordWordPool.push([word, clueTemplate.replace("{label}", label)]);
+    }
+  });
+});
+
 const defaultProgress = {
   xp: 0,
   level: "Junior Planner",
@@ -196,6 +346,11 @@ const defaultProgress = {
 };
 
 let progress = loadProgress();
+let dailyContent;
+let crosswordActiveWord = null;
+let crosswordStartedAt = Date.now();
+let crosswordMistakes = 0;
+let crosswordTimerInterval = null;
 
 const lessons = [
   {
@@ -338,128 +493,146 @@ const lessons = [
 const lessonCheckpoints = [
   [
     {
-      q: "Ventas, Supply y Finanzas llegan con tres numeros distintos al cierre mensual. Que deberia buscar S&OP?",
-      options: ["Elegir el numero de Ventas para acelerar", "Construir un plan unico con premisas, restricciones y decisiones", "Pedir a cada area que ejecute su propio plan", "Esperar al cierre para saber quien tenia razon"],
+      q: "En consumo masivo, Ventas planifica una promo agresiva, Supply arma produccion conservadora y Finanzas proyecta cash con otro volumen. Que problema resuelve S&OP?",
+      options: ["Un problema de exactitud estadistica", "La falta de una verdad compartida para coordinar decisiones", "Un exceso de reuniones comerciales", "Una discusion solo operativa de planta"],
       answer: 1,
-      explain: "S&OP crea una verdad operable: un plan comun con premisas, responsables, riesgos y decisiones visibles.",
+      explain: "S&OP sincroniza funciones alrededor de un plan operable. Las otras opciones reducen el problema a tecnica, reunion u operacion aislada.",
+      feedback: ["La estadistica ayuda, pero el problema es de alineacion y decision.", "", "Mas reuniones no arreglan planes desconectados.", "Planta es parte del sistema, pero S&OP coordina todo el negocio."],
     },
     {
-      q: "El board pide crecer, pero supply muestra capacidad limitada. Cual es la conversacion correcta?",
-      options: ["Ocultar la restriccion para no frenar ambicion", "Forzar forecast al objetivo", "Mostrar alternativas con impacto en cliente, margen, costo y riesgo", "Dejar que Operaciones resuelva durante el mes"],
-      answer: 2,
-      explain: "El proceso sirve para decidir antes de ejecutar, no para trasladar el conflicto a urgencias operativas.",
-    },
-  ],
-  [
-    {
-      q: "Sales sube target de 100 a 115, pero baseline sigue en 96 y Supply tiene capacidad limitada. Que debe hacer Demand Review?",
-      options: ["Cambiar el forecast a 115 para alinear", "Mantener forecast 96, mostrar GAP, documentar supuestos y definir acciones", "Sacar a Supply de la discusion", "Esperar al cierre del mes"],
-      answer: 1,
-      explain: "El forecast representa lo probable. El GAP contra target debe quedar visible para decidir acciones y riesgos.",
-    },
-    {
-      q: "Una promocion grande aparece sin volumen confirmado de cliente. Cual es la mejor respuesta?",
-      options: ["Cargar todo el volumen como forecast firme", "Ignorar la promocion porque no hay certeza", "Crear escenario base/upside con triggers y responsables", "Pedir a Supply que produzca todo por seguridad"],
-      answer: 2,
-      explain: "Cuando hay incertidumbre, Demand Review debe usar escenarios y triggers, no falsa certeza.",
-    },
-  ],
-  [
-    {
-      q: "La demanda pide 120, pero planta y proveedor solo cubren 105. Que deberia hacer Supply Review?",
-      options: ["Aceptar 120 y resolver despues", "Mostrar restriccion y alternativas de mix, overtime, proveedor o gap", "Bajar forecast sin avisar", "Priorizar el primer pedido que llegue"],
-      answer: 1,
-      explain: "La restriccion visible permite decisiones de negocio antes de prometer lo que no puede ejecutarse.",
-    },
-    {
-      q: "Supply detecta lead time dos semanas mayor al supuesto. Que decision habilita mejor el proceso?",
-      options: ["Actualizar punto de pedido y mostrar impacto en servicio/cash", "Mantener parametros para no alterar el plan", "Culpar al proveedor y esperar", "Bajar safety stock para compensar"],
+      q: "Dos areas acuerdan vender mas, pero no queda definido quien ajusta stock, capacidad ni cash. Cual es el riesgo principal?",
+      options: ["Parecer alineados sin que nadie ejecute las decisiones necesarias", "Que el forecast sea demasiado probabilistico", "Que haya demasiada visibilidad de restricciones", "Que Finanzas participe demasiado temprano"],
       answer: 0,
-      explain: "Un cambio de lead time afecta inventario, servicio, cash y riesgo; debe entrar al plan.",
+      explain: "Sin decision, responsable y premisa, el plan unico es solo apariencia. La visibilidad temprana no es el problema: es la solucion.",
+      feedback: ["", "El problema no es la probabilidad: es falta de ownership.", "Ver restricciones temprano evita caos.", "Finanzas temprano evita que el plan cierre en volumen pero falle en valor."],
     },
   ],
   [
     {
-      q: "El S&OP ejecutivo recibe tres alternativas para cerrar el mes: costo extra, renegociar cliente o aceptar gap. Que deberia hacer?",
-      options: ["Pedir mas reportes antes de decidir", "Elegir una alternativa con KPI, responsable y premisa clara", "Devolver el problema a Supply", "Cambiar todos los KPIs objetivo"],
-      answer: 1,
-      explain: "El ejecutivo debe destrabar trade-offs preparados y dejar decisiones accionables.",
-    },
-    {
-      q: "Una decision mejora servicio pero destruye margen. Como deberia tratarse en Executive S&OP?",
-      options: ["Ocultarla si salva el OTIF", "Aprobarla automaticamente", "Mostrar costo/beneficio y decidir si el negocio acepta el trade-off", "Pasarla a la reunion siguiente"],
+      q: "Un retailer informa una posible promo para bebidas, pero aun no confirmo exhibiciones ni precio. Comercial quiere sumar todo el volumen al forecast. Que corresponde?",
+      options: ["Cargar todo porque existe oportunidad", "Ignorar la promo hasta tener confirmacion total", "Separar baseline, upside y triggers de confirmacion", "Pedir a Supply que produzca todo por seguridad"],
       answer: 2,
-      explain: "El board decide que costo acepta para proteger cliente, margen, cash o estrategia.",
+      explain: "Demand Review trabaja con probabilidad, supuestos y escenarios. Evita tanto falsa certeza como reaccion tardia.",
+      feedback: ["Oportunidad no es forecast firme si faltan premisas.", "Ignorarla pierde tiempo de preparacion.", "", "Producir todo puede generar sobrestock, cash atrapado y waste."],
+    },
+    {
+      q: "Durante tres meses, un vendedor sobreestima lanzamientos porque su bono depende del target. El error siempre queda del mismo lado. Que deberia detectar Demand Review?",
+      options: ["Variabilidad aleatoria normal", "Bias sistematico que exige revisar premisas e incentivos", "Restriccion de transporte", "Senal para subir inventario en todos los SKUs"],
+      answer: 1,
+      explain: "Errores repetidos del mismo lado indican bias. La respuesta es corregir premisas e incentivos, no tapar el sesgo con stock.",
+      feedback: ["La variabilidad aleatoria no suele equivocarse siempre en la misma direccion.", "", "Transporte afecta servicio, pero aca el origen es la estimacion.", "Subir stock general tapa el sesgo y destruye cash."],
     },
   ],
   [
     {
-      q: "Target es 100, forecast probable 92. Que es lo mas sano para el proceso?",
-      options: ["Subir forecast a 100 sin acciones", "Mostrar GAP 8 y definir acciones, riesgos y responsables", "Eliminar target", "Pedir a Supply que fabrique 100"],
-      answer: 1,
-      explain: "El GAP visible permite decidir como cerrar la diferencia entre realidad y ambicion.",
-    },
-    {
-      q: "Marketing quiere sumar una promo no validada para llegar al target. Que deberia pedirse?",
-      options: ["Premisas, volumen esperado, riesgo, impacto en KPIs y trigger de decision", "Que carguen el volumen sin debate", "Que Finanzas ignore el margen", "Que se ejecute aunque no haya stock"],
+      q: "Una linea fabrica shampoos o acondicionadores, pero no ambos al volumen pedido. Que debe producir Supply Review?",
+      options: ["Restricciones con alternativas de mix, capacidad y clientes afectados", "Un forecast mas bajo para que el problema desaparezca", "Producir automaticamente el SKU mas facil", "Pedir a Ventas que deje de vender"],
       answer: 0,
-      explain: "Cerrar gap requiere acciones explicitas y evaluadas, no deseos cargados como forecast.",
+      explain: "Supply Review traduce capacidad en opciones ejecutables. Las otras respuestas esconden o simplifican una restriccion que requiere decision.",
+      feedback: ["", "Supply no debe manipular demanda; debe mostrar factibilidad.", "Lo facil puede destruir margen o cliente estrategico.", "No se trata de frenar ventas, sino de decidir como servirlas."],
     },
-  ],
-  [
     {
-      q: "Inventario baja y cash mejora, pero el servicio empieza a caer. Que lectura es mas completa?",
-      options: ["La decision fue buena porque cash subio", "La decision desplazo el problema hacia cliente y riesgo", "Hay que bajar mas stock", "Servicio no importa si margen esta bien"],
+      q: "Un proveedor cambia lead time de 45 a 70 dias antes de temporada alta. Que rompe primero si no se ajusta el plan?",
+      options: ["El diseno del packaging", "La cobertura de inventario y el nivel de servicio futuro", "La participacion de Finanzas", "La medicion de margen del mes actual"],
       answer: 1,
-      explain: "Los KPIs deben leerse juntos: mejorar uno puede deteriorar otro.",
-    },
-    {
-      q: "El margen sube por vender mix premium, pero fill rate cae en clientes estrategicos. Que deberia discutir S&OP?",
-      options: ["Solo celebrar margen", "Volver al mix anterior sin analizar", "Balance entre rentabilidad, servicio, cliente y capacidad", "Eliminar clientes estrategicos del KPI"],
-      answer: 2,
-      explain: "Un KPI financiero fuerte puede esconder deterioro de promesa y satisfaccion.",
+      explain: "Un lead time mayor pega primero en cobertura, reposicion y servicio futuro. El margen actual puede no mostrar aun el riesgo.",
+      feedback: ["Packaging podria importar, pero el caso apunta a reposicion.", "", "Finanzas participa, pero no es lo primero que rompe operacionalmente.", "El margen del mes puede ocultar un quiebre futuro."],
     },
   ],
   [
     {
-      q: "Abrir domingo salva servicio, pero sube costo y riesgo de calidad. Que respuesta muestra mejor trade-off thinking?",
-      options: ["Hacerlo sin avisar porque mejora servicio", "Rechazarlo siempre por costo", "Presentar opciones y pedir aprobacion del costo/riesgo aceptado", "Cambiar el KPI de servicio"],
-      answer: 2,
-      explain: "La buena decision no elimina el costo; lo hace explicito para decidir conscientemente.",
-    },
-    {
-      q: "Ventas quiere volumen barato para cerrar target, Finanzas pide margen. Que deberia hacer S&OP?",
-      options: ["Elegir volumen siempre", "Elegir margen siempre", "Mostrar escenarios de mix y su impacto en margen, servicio y cash", "Evitar la discusion"],
-      answer: 2,
-      explain: "Los trade-offs funcionales se resuelven con escenarios comparables, no con imposiciones aisladas.",
-    },
-  ],
-  [
-    {
-      q: "Hay quiebre por falta de material y las areas empiezan a culparse. Que haria un lider S&OP?",
-      options: ["Buscar culpable publico", "Separar hechos, premisas, riesgos y alternativas de decision", "Esconder la falta hasta tener solucion", "Cambiar el forecast sin explicar"],
+      q: "El comite debe elegir entre flete aereo para salvar un cliente premium o aceptar atraso y proteger margen. Que tipo de decision es?",
+      options: ["Una decision menor de transporte", "Un trade-off estrategico entre servicio, margen y relacion comercial", "Un problema exclusivo del planner", "Una razon para cambiar el forecast historico"],
       answer: 1,
-      explain: "El liderazgo convierte conflicto en claridad accionable, sin cultura de culpa.",
+      explain: "Executive S&OP existe para aceptar o rechazar trade-offs de negocio. No es solo transporte ni forecast.",
+      feedback: ["El transporte es el mecanismo, no la decision completa.", "", "El planner prepara escenarios; el ejecutivo decide el costo aceptado.", "Cambiar forecast historico no resuelve servicio vs margen."],
     },
     {
-      q: "Supply avisa una restriccion que puede afectar un cliente clave. Que comunicacion es mas lider?",
-      options: ["Problema sin alternativas", "Silencio hasta el cierre", "Escenarios con impacto, responsable y decision requerida", "Mensaje tecnico sin KPI"],
-      answer: 2,
-      explain: "Un lider trae alternativas y el impacto de cada una para que el negocio pueda decidir.",
+      q: "El CEO pide 'un numero unico' sin discutir riesgos. Las areas traen alternativas bien preparadas. Que debe proteger Executive S&OP?",
+      options: ["Velocidad de aprobacion por encima de todo", "Visibilidad de riesgos, premisas y responsables antes de aprobar", "Que cada area salga con su propio plan", "Que solo se hable de volumen"],
+      answer: 1,
+      explain: "Liderazgo ejecutivo no es cerrar una diapositiva: es aprobar una decision entendiendo riesgos y ownership.",
+      feedback: ["Velocidad sin claridad puede salir cara.", "", "Planes paralelos destruyen el proceso.", "Volumen sin valor, capacidad y riesgo no alcanza."],
     },
   ],
   [
     {
-      q: "Un cliente pide volumen inesperado para la semana proxima. Hay stock parcial y margen atractivo. Que decision es mas madura?",
-      options: ["Aceptar todo sin validar supply", "Rechazar todo por incertidumbre", "Evaluar servicio, margen, capacidad, riesgo futuro y promesa al cliente", "Cambiar el target despues"],
-      answer: 2,
-      explain: "Bajo presion, la decision correcta explicita impacto presente y consecuencia futura.",
+      q: "Una unidad tiene target 130, pero clientes confirmados y conversion dan forecast 108. Que debe quedar separado?",
+      options: ["Forecast probable, target aspiracional y acciones para el GAP", "Forecast y target para evitar conversaciones dificiles", "Forecast y premisas comerciales", "Capacidad de Supply y demanda"],
+      answer: 0,
+      explain: "Separar forecast, target y GAP permite decidir acciones. Mezclarlos crea falsa alineacion.",
+      feedback: ["", "Deben separarse para gestionar el GAP.", "Forecast sin premisas es un numero indefendible.", "Supply no define demanda, pero ayuda a elegir acciones realistas."],
     },
     {
-      q: "La certeza total llegaria despues del cierre. Que deberia hacer el equipo?",
-      options: ["Esperar el dato perfecto", "Decidir con escenarios, premisas y triggers", "Ocultar el riesgo", "Cancelar el proceso S&OP"],
+      q: "El GAP es de 18 puntos. Ventas propone descuentos fuertes, Supply advierte falta de stock y Finanzas ve margen negativo. Que lo vuelve gestionable?",
+      options: ["Subir forecast para eliminar el GAP", "Elegir la accion comercial mas rapida", "Escenarios con impacto en margen, stock, servicio y responsable", "Posponer la discusion hasta cierre"],
+      answer: 2,
+      explain: "El GAP se gestiona con acciones comparables y KPIs visibles. Lo demas es esconder, apurar o explicar tarde.",
+      feedback: ["Eso elimina el indicador, no el problema.", "Rapido no significa bueno si rompe margen o disponibilidad.", "", "Esperar convierte una decision en post-mortem."],
+    },
+  ],
+  [
+    {
+      q: "El dashboard muestra inventario -18%, cash +12%, servicio -9% y quejas +15%. Que lectura es mas sistemica?",
+      options: ["La mejora de cash justifica todo", "Se libero capital trasladando costo al cliente y al riesgo", "El servicio caera solo un mes", "Inventario siempre debe ser minimo"],
       answer: 1,
-      explain: "En Supply Chain, una decision suficientemente informada a tiempo vale mas que una certeza perfecta tarde.",
+      explain: "KPIs conectados muestran efectos secundarios. Optimizar cash solo puede danar servicio y satisfaccion.",
+      feedback: ["Cash importa, pero no aislado.", "", "Asumir temporalidad sin premisas es riesgoso.", "Inventario minimo no siempre es inventario correcto."],
+    },
+    {
+      q: "Un SKU de alto margen absorbe capacidad y mejora rentabilidad, pero baja fill rate en una familia basica. Que pregunta debe hacer el equipo?",
+      options: ["Como maximizar margen sin mirar servicio", "Que KPI gana y que KPI paga el costo de esta priorizacion", "Como esconder el fill rate bajo", "Como producir todo sin validar capacidad"],
+      answer: 1,
+      explain: "Pensamiento de sistema pregunta por causalidad y costo entre KPIs. Los distractores optimizan localmente o niegan restricciones.",
+      feedback: ["Margen aislado puede deteriorar promesa.", "", "Ocultar KPIs rompe confianza.", "Producir todo sin capacidad es deseo, no plan."],
+    },
+  ],
+  [
+    {
+      q: "Un cliente estrategico necesita entrega completa, pero cumplir implica overtime, riesgo de calidad y costo extra. Ninguna opcion es limpia. Que decision es mejor?",
+      options: ["Cumplir sin informar costo", "Rechazar por politica de costos", "Comparar cumplir completo, parcial o renegociar con consecuencias visibles", "Cambiar el pedido para que el KPI cierre"],
+      answer: 2,
+      explain: "Cuando no hay opcion perfecta, la calidad esta en comparar consecuencias y decidir conscientemente.",
+      feedback: ["Proteger cliente ocultando costo crea deuda.", "Una politica rigida puede destruir relacion.", "", "Cambiar el pedido maquilla el resultado."],
+    },
+    {
+      q: "Reducir inventario hoy mejora cash trimestral, pero aumenta quiebre en un lanzamiento proximo. Que hace mas realista el trade-off?",
+      options: ["Elegir cash porque es inmediato", "Mantener stock infinito por miedo", "Definir cuanto cash liberar sin superar riesgo aceptado de quiebre", "Mover el lanzamiento sin avisar"],
+      answer: 2,
+      explain: "Los trade-offs requieren limites y tolerancia de riesgo, no extremos.",
+      feedback: ["Lo inmediato puede crear costo mayor despues.", "Stock infinito protege servicio pero destruye cash.", "", "Mover el lanzamiento sin alineacion rompe el plan."],
+    },
+  ],
+  [
+    {
+      q: "En una reunion tensa, Ventas acusa a Supply por un quiebre y Supply responde que Ventas inflo demanda. Que intervencion muestra liderazgo?",
+      options: ["Pedir nombres de responsables", "Documentar hechos, premisas fallidas, impacto y decision requerida", "Cerrar la reunion para evitar conflicto", "Cambiar el KPI para no exponer el problema"],
+      answer: 1,
+      explain: "Liderazgo S&OP transforma tension humana en aprendizaje, decision y ownership.",
+      feedback: ["Accountability no es buscar culpables publicos.", "", "Evitar conflicto deja el problema vivo.", "Maquillar KPIs destruye confianza."],
+    },
+    {
+      q: "Un planner detecta que una decision aprobada generara sobrecosto, pero teme escalar porque 'ya se decidio'. Que comportamiento debe promover el lider?",
+      options: ["No reabrir decisiones incomodas", "Escalar con datos, impacto y alternativas sin culpar", "Esperar a que el costo aparezca contablemente", "Enviar el problema por mail y desentenderse"],
+      answer: 1,
+      explain: "No blame culture permite escalar riesgos temprano con alternativas concretas.",
+      feedback: ["La comodidad politica puede salir cara.", "", "Cuando aparece contablemente suele ser tarde.", "Comunicar sin ownership no lidera la solucion."],
+    },
+  ],
+  [
+    {
+      q: "Faltan 48 horas para cerrar mes. Un cliente ofrece una orden grande, margen bueno, pero consume safety stock de otro canal. Que decision es mas robusta?",
+      options: ["Aceptar todo por margen", "Rechazar todo por riesgo", "Priorizar con reglas: margen, cliente, stockout futuro y comunicacion al canal afectado", "Aceptar y ajustar indicadores despues"],
+      answer: 2,
+      explain: "Bajo tiempo limitado se decide con criterios claros y riesgos visibles, no con reflejos extremos.",
+      feedback: ["Margen atractivo no elimina el riesgo futuro.", "Rechazar todo pierde oportunidad sin analisis.", "", "Ajustar indicadores despues erosiona confianza."],
+    },
+    {
+      q: "Durante una huelga de transporte, la informacion cambia cada hora. Hay pedidos criticos y datos incompletos. Que enfoque reduce mejor el dano?",
+      options: ["Esperar informacion perfecta", "Armar escenarios por criticidad de cliente, ventana de entrega y costo alternativo", "Despachar por orden de llegada", "Prometer todo y corregir despues"],
+      answer: 1,
+      explain: "Presion real exige escenarios, priorizacion y revision continua. Las otras opciones son tardias, arbitrarias o irresponsables.",
+      feedback: ["La certeza perfecta puede llegar tarde.", "", "Orden de llegada parece justo, pero puede destruir valor estrategico.", "Prometer todo traslada el problema al cliente."],
     },
   ],
 ];
@@ -1367,6 +1540,125 @@ function loadProgress() {
   }
 }
 
+function getCurrentLocalDateKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function seededRandom(seedText) {
+  let seed = 2166136261;
+  for (let index = 0; index < seedText.length; index += 1) {
+    seed ^= seedText.charCodeAt(index);
+    seed = Math.imul(seed, 16777619);
+  }
+  return () => {
+    seed += 0x6D2B79F5;
+    let value = seed;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffledIndexes(length, seedText) {
+  const random = seededRandom(seedText);
+  const values = Array.from({ length }, (_, index) => index);
+  for (let index = values.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(random() * (index + 1));
+    [values[index], values[swap]] = [values[swap], values[index]];
+  }
+  return values;
+}
+
+function checkDailyReset() {
+  const today = getCurrentLocalDateKey();
+  const saved = JSON.parse(localStorage.getItem(dailyKey) || "null");
+  if (saved?.date === today) return saved;
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayKey = getCurrentLocalDateKey(yesterday);
+  const streak = saved?.crossword?.completedDates?.includes(yesterdayKey) ? (saved.crossword.streak || 0) : 0;
+  const next = {
+    date: today,
+    dailyXp: 0,
+    completedMiniGames: [],
+    simulationCompleted: false,
+    allMiniGamesBonusClaimed: false,
+    miniGameSeeds: generateDailyMiniGames(today),
+    simulationSeed: generateDailySimulation(today),
+    crossword: {
+      ...generateDailyCrossword(today),
+      completed: false,
+      completedDates: saved?.crossword?.completedDates || [],
+      streak,
+      bestTime: saved?.crossword?.bestTime || null,
+      perfectCompletions: saved?.crossword?.perfectCompletions || 0,
+      streakBonuses: saved?.crossword?.streakBonuses || [],
+    },
+  };
+  saveDailyContent(next);
+  return next;
+}
+
+function saveDailyContent(content = dailyContent) {
+  localStorage.setItem(dailyKey, JSON.stringify(content));
+}
+
+function generateDailyMiniGames(dateKey) {
+  return {
+    gap: shuffledIndexes(gapScenarios.length, `${dateKey}-gap`),
+    stock: shuffledIndexes(stockScenarios.length, `${dateKey}-stock`),
+    decision: shuffledIndexes(decisionPracticeScenarios.length, `${dateKey}-decision`),
+    quiz: shuffledIndexes(quizQuestions.length, `${dateKey}-quiz`),
+    baseShift: Math.floor(seededRandom(`${dateKey}-base`)() * 9) - 4,
+  };
+}
+
+function generateDailySimulation(dateKey) {
+  const random = seededRandom(`${dateKey}-simulation`);
+  return {
+    eventBias: random(),
+    serviceShift: Math.floor(random() * 9) - 4,
+    marginShift: Math.floor(random() * 5) - 2,
+    riskShift: Math.floor(random() * 7),
+  };
+}
+
+function generateDailyCrossword(dateKey) {
+  const indexes = shuffledIndexes(crosswordWordPool.length, `${dateKey}-crossword`).slice(0, 20);
+  const entries = indexes.map((poolIndex, index) => {
+    const [word, clue] = crosswordWordPool[poolIndex];
+    return { id: index, word, clue, direction: index % 2 === 0 ? "across" : "down" };
+  });
+  const size = 27;
+  const grid = Array.from({ length: size }, () => Array.from({ length: size }, () => null));
+  entries.forEach((entry, index) => {
+    const groupIndex = Math.floor(index / 2);
+    const row = entry.direction === "across" ? 1 + groupIndex : 1;
+    const col = entry.direction === "across" ? 1 : 14 + groupIndex;
+    const maxStart = size - entry.word.length - 1;
+    entry.row = Math.min(row, entry.direction === "down" ? maxStart : size - 2);
+    entry.col = Math.min(col, entry.direction === "across" ? maxStart : size - 2);
+    entry.number = index + 1;
+    [...entry.word].forEach((letter, offset) => {
+      const r = entry.row + (entry.direction === "down" ? offset : 0);
+      const c = entry.col + (entry.direction === "across" ? offset : 0);
+      grid[r][c] = { letter, entries: [...(grid[r][c]?.entries || []), entry.id] };
+    });
+  });
+  return { size, entries, grid };
+}
+
+function secondsUntilNextRefresh() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setDate(now.getDate() + 1);
+  midnight.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.floor((midnight - now) / 1000));
+}
+
 function saveProgress() {
   // Future Supabase sync point: replace/extend this localStorage write with authenticated user progress persistence.
   localStorage.setItem(progressKey, JSON.stringify(progress));
@@ -1563,6 +1855,27 @@ function completeMiniGame(id, score = 0) {
   saveProgress();
   checkBadges();
   renderProgressDashboard();
+  claimDailyMiniGameXp(id, score);
+}
+
+function claimDailyMiniGameXp(id, score = 0) {
+  if (!coreMiniGames.includes(id)) return;
+  if (!dailyContent || dailyContent.completedMiniGames.includes(id)) return;
+  dailyContent.completedMiniGames.push(id);
+  dailyContent.dailyXp += 65;
+  addXP(65, `Mini juego diario: ${id}`);
+  if (score >= 18) {
+    dailyContent.dailyXp += 20;
+    addXP(20, "Perfect score diario");
+  }
+  const dailyCoreCount = dailyContent.completedMiniGames.filter((game) => coreMiniGames.includes(game)).length;
+  if (dailyCoreCount >= coreMiniGames.length && !dailyContent.allMiniGamesBonusClaimed) {
+    dailyContent.allMiniGamesBonusClaimed = true;
+    dailyContent.dailyXp += 100;
+    addXP(100, "Completaste todos los mini juegos diarios");
+  }
+  saveDailyContent();
+  renderProgressDashboard();
 }
 
 function completeMasterSimulation(score) {
@@ -1574,6 +1887,32 @@ function completeMasterSimulation(score) {
   if (score > previousScore) addXP(20, "Mejoraste tu simulacion");
   saveProgress();
   checkBadges();
+  renderProgressDashboard();
+  claimDailySimulationXp(score);
+}
+
+function claimDailySimulationXp(score) {
+  if (!dailyContent || dailyContent.simulationCompleted) return;
+  dailyContent.simulationCompleted = true;
+  dailyContent.dailyXp += 150;
+  addXP(150, "Simulacion diaria completada");
+  const previousBest = progress.bestScores.masterDaily || 0;
+  if (score > previousBest) {
+    progress.bestScores.masterDaily = score;
+    dailyContent.dailyXp += previousBest ? 25 : 0;
+    if (previousBest) addXP(25, "Mejoraste tu simulacion diaria");
+  }
+  const current = getMasterState();
+  if (current.service >= 78 && current.margin >= 24 && current.risk <= 48 && current.cash >= 58) {
+    dailyContent.dailyXp += 50;
+    addXP(50, "Excelente balance de KPIs");
+  }
+  if (current.service >= 65 && current.risk <= 70) {
+    dailyContent.dailyXp += 30;
+    addXP(30, "Sin falla critica");
+  }
+  saveDailyContent();
+  saveProgress();
   renderProgressDashboard();
 }
 
@@ -1636,9 +1975,53 @@ function renderProgressDashboard() {
   document.querySelector("#progressBestScores").innerHTML = bestScores.length
     ? bestScores.map(([game, score]) => `<span>${game}: ${score}</span>`).join("")
     : "<span>Best scores: todavia sin registros</span>";
+  const refreshSeconds = secondsUntilNextRefresh();
+  const hours = String(Math.floor(refreshSeconds / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((refreshSeconds % 3600) / 60)).padStart(2, "0");
+  const dailyCoreCount = dailyContent?.completedMiniGames.filter((game) => coreMiniGames.includes(game)).length || 0;
+  document.querySelector("#dailyStatus").innerHTML = `
+    <div><span>Crossword</span><strong>${dailyContent?.crossword.completed ? "Completo" : "Pendiente"}</strong></div>
+    <div><span>Diario mini juegos</span><strong>${dailyCoreCount}/${coreMiniGames.length}</strong></div>
+    <div><span>Simulacion diaria</span><strong>${dailyContent?.simulationCompleted ? "Completa" : "Pendiente"}</strong></div>
+    <div><span>XP hoy</span><strong>${dailyContent?.dailyXp || 0}</strong></div>
+    <div><span>Streak</span><strong>${dailyContent?.crossword.streak || 0} dias</strong></div>
+    <div><span>Refresh</span><strong>${hours}:${minutes}</strong></div>
+  `;
   const difficulty = document.querySelector("#difficultyLabel");
   if (difficulty) difficulty.textContent = `Dificultad actual: ${currentDifficulty().label}`;
+  renderProgressionMap();
   saveProgress();
+}
+
+function renderProgressionMap() {
+  const node = document.querySelector("#progressionMap");
+  if (!node) return;
+  const currentIndex = levelIndexByName(progress.level);
+  const next = nextLevelInfo();
+  node.innerHTML = `
+    <div class="map-heading">
+      <div>
+        <p class="eyebrow">Strategic Progression Map</p>
+        <h3>Camino hacia World Class SC Director</h3>
+      </div>
+      <span>${progress.xp} XP · next: ${next.name}</span>
+    </div>
+    <div class="level-route">
+      ${levels.map((level, index) => {
+        const completed = index < currentIndex;
+        const current = index === currentIndex;
+        const locked = index > currentIndex;
+        const icons = ["▤", "▥", "▧", "◎", "⌘", "▣", "♛"];
+        return `
+          <button class="level-node ${completed ? "completed" : ""} ${current ? "current" : ""} ${locked ? "locked" : ""}" type="button" title="XP ${level.xp} · Lecciones ${level.lessons} · Mini juegos ${level.miniGames} · Score ${level.simulationScore}">
+            <span>${icons[index]}</span>
+            <strong>${level.name}</strong>
+            <small>${locked ? "Locked" : current ? "Current" : "Unlocked"}</small>
+          </button>
+        `;
+      }).join("")}
+    </div>
+  `;
 }
 
 function resetProgress() {
@@ -1942,7 +2325,8 @@ function chooseDecisionPractice(optionIndex) {
 }
 
 function nextDecisionPractice() {
-  currentDecisionScenario = (currentDecisionScenario + 1) % decisionPracticeScenarios.length;
+  const order = dailyContent.miniGameSeeds.decision;
+  currentDecisionScenario = order[(order.indexOf(currentDecisionScenario) + 1) % order.length];
   renderDecisionPractice();
 }
 
@@ -1958,7 +2342,7 @@ function describeImpact(impact = {}) {
 }
 
 function renderQuiz() {
-  const question = quizQuestions[currentQuiz];
+  const question = getCurrentQuizQuestion();
   updateQuizProgress();
   document.querySelector("#quizQuestion").innerHTML = `<h3>${question.q}</h3>`;
   document.querySelector("#quizOptions").innerHTML = question.options
@@ -1970,6 +2354,111 @@ function renderQuiz() {
     .join("");
   document.querySelector("#quizFeedback").textContent = "Elegí una respuesta. El quiz no modifica KPIs.";
   document.querySelector("#nextQuizQuestion").hidden = true;
+}
+
+function getCurrentQuizQuestion() {
+  const order = dailyContent?.miniGameSeeds?.quiz || quizQuestions.map((_, index) => index);
+  return quizQuestions[order[currentQuiz % order.length]];
+}
+
+function renderCrossword() {
+  if (!dailyContent) return;
+  const crossword = dailyContent.crossword;
+  const grid = document.querySelector("#crosswordGrid");
+  if (!grid) return;
+  grid.style.gridTemplateColumns = `repeat(${crossword.size}, minmax(0, 1fr))`;
+  grid.innerHTML = crossword.grid
+    .flatMap((row, rowIndex) => row.map((cell, colIndex) => {
+      if (!cell) return `<input class="crossword-cell block" aria-hidden="true" tabindex="-1" />`;
+      return `<input class="crossword-cell letter" maxlength="1" data-row="${rowIndex}" data-col="${colIndex}" data-answer="${cell.letter}" data-entries="${cell.entries.join(",")}" aria-label="Celda crossword" />`;
+    }))
+    .join("");
+  const clueMarkup = (direction) => crossword.entries
+    .filter((entry) => entry.direction === direction)
+    .map((entry) => `<button class="clue-button" type="button" data-clue="${entry.id}">${entry.number}. ${entry.clue}</button>`)
+    .join("");
+  document.querySelector("#acrossClues").innerHTML = clueMarkup("across");
+  document.querySelector("#downClues").innerHTML = clueMarkup("down");
+  document.querySelector("#crosswordMeta").textContent = `${crossword.entries.length} palabras · streak ${crossword.streak || 0} dias`;
+  crosswordStartedAt = Date.now();
+  crosswordMistakes = 0;
+  startCrosswordTimer();
+}
+
+function startCrosswordTimer() {
+  if (crosswordTimerInterval) clearInterval(crosswordTimerInterval);
+  crosswordTimerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - crosswordStartedAt) / 1000);
+    const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    const seconds = String(elapsed % 60).padStart(2, "0");
+    const timer = document.querySelector("#crosswordTimer");
+    if (timer) timer.textContent = `${minutes}:${seconds}`;
+  }, 1000);
+}
+
+function setActiveCrosswordWord(id) {
+  crosswordActiveWord = Number(id);
+  document.querySelectorAll(".crossword-cell").forEach((cell) => {
+    const ids = cell.dataset.entries?.split(",").map(Number) || [];
+    cell.classList.toggle("active-word", ids.includes(crosswordActiveWord));
+  });
+  document.querySelectorAll(".clue-button").forEach((button) => {
+    button.classList.toggle("active", Number(button.dataset.clue) === crosswordActiveWord);
+  });
+}
+
+function getCrosswordCellsForEntry(entry) {
+  return [...document.querySelectorAll(".crossword-cell:not(.block)")].filter((cell) =>
+    (cell.dataset.entries || "").split(",").map(Number).includes(entry.id)
+  );
+}
+
+function checkCrosswordProgress() {
+  const crossword = dailyContent.crossword;
+  let completedWords = 0;
+  crossword.entries.forEach((entry) => {
+    const cells = getCrosswordCellsForEntry(entry);
+    const value = cells.map((cell) => cell.value.toUpperCase()).join("");
+    const complete = value.length === entry.word.length && value === entry.word;
+    if (complete) completedWords += 1;
+    cells.forEach((cell) => cell.classList.toggle("correct", complete));
+    document.querySelector(`[data-clue="${entry.id}"]`)?.classList.toggle("completed", complete);
+  });
+  document.querySelector("#crosswordFeedback").textContent = `${completedWords}/${crossword.entries.length} palabras completas.`;
+  if (completedWords === crossword.entries.length) completeDailyCrossword();
+}
+
+function completeDailyCrossword() {
+  if (dailyContent.crossword.completed) return;
+  dailyContent.crossword.completed = true;
+  const elapsed = Math.floor((Date.now() - crosswordStartedAt) / 1000);
+  dailyContent.crossword.bestTime = dailyContent.crossword.bestTime ? Math.min(dailyContent.crossword.bestTime, elapsed) : elapsed;
+  dailyContent.crossword.completedDates.push(dailyContent.date);
+  dailyContent.crossword.streak = (dailyContent.crossword.streak || 0) + 1;
+  dailyContent.dailyXp += 180;
+  addXP(180, "Daily Crossword completo");
+  if (crosswordMistakes === 0) {
+    dailyContent.crossword.perfectCompletions += 1;
+    dailyContent.dailyXp += 40;
+    addXP(40, "Crossword perfecto");
+  }
+  if (elapsed <= 600) {
+    dailyContent.dailyXp += 30;
+    addXP(30, "Crossword bajo 10 minutos");
+  }
+  if (dailyContent.crossword.streak >= 3 && !dailyContent.crossword.streakBonuses.includes("3")) {
+    dailyContent.crossword.streakBonuses.push("3");
+    dailyContent.dailyXp += 100;
+    addXP(100, "Streak 3 dias");
+  }
+  if (dailyContent.crossword.streak >= 7 && !dailyContent.crossword.streakBonuses.includes("7")) {
+    dailyContent.crossword.streakBonuses.push("7");
+    dailyContent.dailyXp += 250;
+    addXP(250, "Streak 7 dias");
+  }
+  saveDailyContent();
+  renderProgressDashboard();
+  document.querySelector("#crosswordFeedback").textContent = "Crossword completo. XP diario reclamado.";
 }
 
 function updateQuizProgress() {
@@ -2015,8 +2504,9 @@ function maybeAddRandomEvent() {
   const difficulty = currentDifficulty();
   if (difficulty.index < 3 || masterMonth >= masterMonths.length - 1) return;
   if (masterRandomEvents.some((event) => event.from === masterMonth)) return;
-  if (Math.random() > Math.min(0.22 + difficulty.index * 0.08, 0.68)) return;
-  const event = randomBusinessEvents[Math.floor(Math.random() * randomBusinessEvents.length)];
+  const random = seededRandom(`${dailyContent.date}-master-${masterMonth}-${masterHistory.length}`);
+  if (random() > Math.min(0.22 + difficulty.index * 0.08 + (dailyContent.simulationSeed.eventBias * 0.08), 0.72)) return;
+  const event = randomBusinessEvents[Math.floor(random() * randomBusinessEvents.length)];
   masterRandomEvents.push({
     ...event,
     id: `random-${masterMonth}-${Date.now()}`,
@@ -2046,7 +2536,12 @@ function currentMasterImpact() {
 
 function getMasterState() {
   const totalImpact = currentMasterImpact();
-  const next = { ...masterBaseState };
+  const next = {
+    ...masterBaseState,
+    service: clamp(masterBaseState.service + (dailyContent?.simulationSeed.serviceShift || 0)),
+    margin: clamp(masterBaseState.margin + (dailyContent?.simulationSeed.marginShift || 0)),
+    risk: clamp(masterBaseState.risk + (dailyContent?.simulationSeed.riskShift || 0)),
+  };
   Object.entries(totalImpact).forEach(([key, value]) => {
     if (key in next) next[key] = clamp(next[key] + value);
   });
@@ -2478,7 +2973,9 @@ function bindEvents() {
         });
         if (feedback) feedback.textContent = checkpoint.explain;
       } else {
-        state.checkpointFeedback[questionIndex] = "No exactamente. Volve a mirar el caso: la mejor respuesta debe hacer visible el trade-off, las premisas y el impacto en KPIs.";
+        state.checkpointFeedback[questionIndex] =
+          checkpoint.feedback?.[selected] ||
+          "No exactamente. Esa opcion resuelve una parte del problema, pero deja sin gestionar premisas, consecuencias o KPIs clave.";
         if (feedback) feedback.textContent = state.checkpointFeedback[questionIndex];
       }
       updateLessonProgressUI(index);
@@ -2505,6 +3002,40 @@ function bindEvents() {
     }
   }, true);
 
+  document.querySelector("#crosswordGrid").addEventListener("focusin", (event) => {
+    const cell = event.target.closest(".crossword-cell:not(.block)");
+    if (!cell) return;
+    const firstEntry = Number((cell.dataset.entries || "").split(",")[0]);
+    setActiveCrosswordWord(firstEntry);
+  });
+
+  document.querySelector("#crosswordGrid").addEventListener("input", (event) => {
+    const cell = event.target.closest(".crossword-cell:not(.block)");
+    if (!cell) return;
+    cell.value = cell.value.toUpperCase().replace(/[^A-Z]/g, "");
+    if (cell.value && cell.value !== cell.dataset.answer) {
+      crosswordMistakes += 1;
+      cell.classList.add("wrong");
+    } else {
+      cell.classList.remove("wrong");
+    }
+    const entry = dailyContent.crossword.entries.find((item) => item.id === crosswordActiveWord);
+    if (entry && cell.value) {
+      const cells = getCrosswordCellsForEntry(entry);
+      const next = cells[cells.indexOf(cell) + 1];
+      if (next) next.focus();
+    }
+    checkCrosswordProgress();
+  });
+
+  document.querySelector(".crossword-clues").addEventListener("click", (event) => {
+    const clue = event.target.closest("[data-clue]");
+    if (!clue) return;
+    const id = Number(clue.dataset.clue);
+    setActiveCrosswordWord(id);
+    getCrosswordCellsForEntry(dailyContent.crossword.entries.find((entry) => entry.id === id))[0]?.focus();
+  });
+
   document.querySelectorAll(".tab").forEach((tab) => {
     tab.addEventListener("click", () => {
       const game = tab.dataset.game;
@@ -2519,7 +3050,8 @@ function bindEvents() {
   });
 
   document.querySelector("#nextGapScenario").addEventListener("click", () => {
-    currentGapScenario = (currentGapScenario + 1) % gapScenarios.length;
+    const order = dailyContent.miniGameSeeds.gap;
+    currentGapScenario = order[(order.indexOf(currentGapScenario) + 1) % order.length];
     renderGapScenario();
   });
 
@@ -2538,7 +3070,8 @@ function bindEvents() {
   });
 
   document.querySelector("#nextStockScenario").addEventListener("click", () => {
-    currentStockScenario = (currentStockScenario + 1) % stockScenarios.length;
+    const order = dailyContent.miniGameSeeds.stock;
+    currentStockScenario = order[(order.indexOf(currentStockScenario) + 1) % order.length];
     renderStockScenario();
   });
 
@@ -2576,7 +3109,7 @@ function bindEvents() {
     const option = event.target.closest("[data-quiz]");
     if (!option) return;
     const selected = Number(option.dataset.quiz);
-    const question = quizQuestions[currentQuiz];
+    const question = getCurrentQuizQuestion();
     const correct = selected === question.answer;
     document.querySelectorAll("#quizOptions .quiz-option").forEach((item) => item.classList.remove("selected", "correct", "wrong"));
     option.classList.add("selected", correct ? "correct" : "wrong");
@@ -2829,6 +3362,10 @@ function rotatePageVisuals() {
   }, 3800);
 }
 
+dailyContent = checkDailyReset();
+currentGapScenario = dailyContent.miniGameSeeds.gap[0] || 0;
+currentStockScenario = dailyContent.miniGameSeeds.stock[0] || 0;
+currentDecisionScenario = dailyContent.miniGameSeeds.decision[0] || 0;
 renderJourney();
 renderDashboard();
 renderGapScenario();
@@ -2836,9 +3373,11 @@ renderStockScenario();
 renderDecisionPractice();
 renderQuiz();
 renderCases();
+renderCrossword();
 renderQuickPrompts();
 renderMasterSimulation();
 renderProgressDashboard();
+setInterval(renderProgressDashboard, 60000);
 bindEvents();
 showPageFromHash();
 rotateQuotes();
