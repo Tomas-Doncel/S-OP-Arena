@@ -203,7 +203,15 @@
           </p>
         </div>
         <div class="crossword-shell">
-          <div>
+          <div class="crossword-play-area">
+            <div class="crossword-active-bar" id="crosswordActiveBar">
+              <button class="crossword-nav" type="button" data-crossword-prev aria-label="Pista anterior">‹</button>
+              <div>
+                <strong id="activeClueLabel">H1.</strong>
+                <span id="activeClueText">Selecciona una pista para empezar.</span>
+              </div>
+              <button class="crossword-nav" type="button" data-crossword-next aria-label="Pista siguiente">›</button>
+            </div>
             <div class="crossword-topline">
               <div>
                 <h3 id="crosswordTitle">Crossword diario</h3>
@@ -212,6 +220,7 @@
               <div class="crossword-timer" id="crosswordTimer">00:00</div>
             </div>
             <div class="crossword-grid" id="crosswordGrid" aria-label="Daily Supply Chain Crossword"></div>
+            <div class="crossword-footer" id="crosswordFooter">Crucigrama | Hoy</div>
             <div class="crossword-feedback" id="crosswordFeedback">Selecciona una pista y empeza a escribir.</div>
           </div>
           <aside class="crossword-clues">
