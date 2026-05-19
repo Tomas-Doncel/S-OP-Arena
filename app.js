@@ -110,16 +110,105 @@ const rotatingVisuals = {
   ],
 };
 
+const heroVisualSlides = [
+  {
+    title: "Sincronizacion Down - Top",
+    tag: "ONE Process",
+    type: "ladder",
+    cards: [
+      ["01", "Activity Review", "Marketing + Ventas"],
+      ["02", "Demand Review", "Demand Planning + Comercial"],
+      ["03", "Supply & Demand Review", "Supply, Demand, Operaciones"],
+      ["04", "Comite de Negocio", "Marketing, Ventas, SC, Finanzas"],
+      ["05", "S&OP Ejecutivo", "Board + Gerencia General"],
+    ],
+  },
+  {
+    title: "One Plan Alignment",
+    tag: "ALIGN",
+    type: "network",
+    cards: [
+      ["Ventas", "Demanda y clientes"],
+      ["Supply", "Capacidad y materiales"],
+      ["Finanzas", "Margen y cash"],
+      ["Board", "Prioridades y riesgos"],
+    ],
+  },
+  {
+    title: "Forecast vs Target GAP",
+    tag: "GAP",
+    type: "gap",
+    cards: [
+      ["Target", "115"],
+      ["Forecast", "96"],
+      ["GAP", "19 puntos"],
+      ["Accion", "Premisas + responsables"],
+    ],
+  },
+  {
+    title: "KPI Pulse",
+    tag: "DASHBOARD",
+    type: "kpi",
+    cards: [
+      ["Servicio", "84%"],
+      ["Margen", "28%"],
+      ["Cash", "72%"],
+      ["Riesgo", "34%"],
+    ],
+  },
+];
+
+const progressKey = "sopArenaProgress_v3";
+const coreMiniGames = ["forecast", "stock", "supply", "executive", "spike", "meeting"];
+const levels = [
+  { name: "Junior Planner", xp: 0, lessons: 0, miniGames: 0, simulationScore: 0 },
+  { name: "Demand Analyst", xp: 500, lessons: 3, miniGames: 1, simulationScore: 0 },
+  { name: "Supply Planner", xp: 1200, lessons: 6, miniGames: 3, simulationScore: 0 },
+  { name: "S&OP Manager", xp: 2200, lessons: 9, miniGames: 4, simulationScore: 60 },
+  { name: "Supply Chain Leader", xp: 3500, lessons: 9, miniGames: 6, simulationScore: 75 },
+  { name: "SC Director", xp: 5200, lessons: 9, miniGames: 6, simulationScore: 90 },
+  { name: "World Class SC Director", xp: 7500, lessons: 9, miniGames: 6, simulationScore: 110 },
+];
+
+const badges = [
+  { name: "One Plan Thinker", icon: "◎", description: "Conectaste areas, premisas y un plan unico." },
+  { name: "Gap Hunter", icon: "⌕", description: "Hiciste visible el GAP y lo convertiste en acciones." },
+  { name: "Inventory Guardian", icon: "▣", description: "Leiste patrones de stock antes de reaccionar tarde." },
+  { name: "Margin Protector", icon: "$", description: "Protegiste margen en decisiones bajo presion." },
+  { name: "Trade-off Master", icon: "⚖", description: "Balanceaste servicio, costo, riesgo y margen." },
+  { name: "Crisis Leader", icon: "⚡", description: "Terminaste una simulacion con consecuencias reales." },
+  { name: "No Blame Culture", icon: "◇", description: "Aprendiste sin buscar culpables ni esconder problemas." },
+  { name: "SC Director Mindset", icon: "♛", description: "Alcanzaste pensamiento ejecutivo de Supply Chain." },
+];
+
+const defaultProgress = {
+  xp: 0,
+  level: "Junior Planner",
+  completedSections: [],
+  completedMiniGames: [],
+  bestScores: {},
+  badges: [],
+  lastSimulationScore: 0,
+  totalDecisions: 0,
+  balancedDecisions: 0,
+  stockoutsAvoided: 0,
+  marginProtected: 0,
+};
+
+let progress = loadProgress();
+
 const lessons = [
   {
     num: "01",
     title: "Que es S&OP",
     short: "Un proceso para alinear demanda, supply, finanzas y estrategia.",
     theory: [
-      "S&OP no es una reunion: es el proceso que convierte informacion dispersa en un solo plan.",
-      "Alinea volumen, valor, capacidad, inventario, clientes y cash.",
-      "Su objetivo es decidir antes de ejecutar, no explicar tarde lo que ya paso.",
-      "Cuando funciona, las areas dejan de defender su numero y empiezan a defender el plan comun.",
+      "Definicion: S&OP es el proceso que convierte informacion dispersa en un solo plan de negocio.",
+      "Por que importa: alinea volumen, valor, capacidad, inventario, clientes y cash antes de ejecutar.",
+      "Decisiones que habilita: prioridades comerciales, restricciones de supply, inversiones y riesgos aceptados.",
+      "KPIs afectados: servicio, margen, costo SC, cash, inventario, satisfaccion y riesgo.",
+      "Error comun: tratarlo como una reunion de reporte donde cada area defiende su propio numero.",
+      "Ejemplo: Ventas quiere crecer 12%, Supply solo puede entregar 7%; S&OP obliga a decidir mix, fechas, costo extra o gap visible.",
     ],
     takeaway: "Clave: S&OP crea sincronizacion, no presentaciones.",
     unlock: "Mini juego recomendado: Reunion S&OP.",
@@ -129,10 +218,12 @@ const lessons = [
     title: "Revision de demanda",
     short: "De senales comerciales a demanda discutible y accionable.",
     theory: [
-      "Consolida baseline, actividades, promociones, riesgos y oportunidades.",
-      "El forecast no debe maquillarse para llegar al target.",
-      "Las premisas importan tanto como el numero: explican por que creemos que pasara algo.",
-      "Una buena Demand Review deja gaps visibles y alternativas comerciales.",
+      "Definicion: Demand Review transforma senales comerciales en demanda probable con premisas claras.",
+      "Por que importa: evita que promociones, lanzamientos o clientes clave entren tarde al plan.",
+      "Decisiones que habilita: acciones para cerrar gaps, validar upside, ajustar mix o activar escenarios.",
+      "KPIs afectados: forecast accuracy, servicio, stock, margen, satisfaccion y riesgo.",
+      "Error comun: subir el forecast para que coincida con el target sin acciones reales.",
+      "Ejemplo: target 100, forecast 92; la reunion debe mostrar el GAP de 8 y proponer acciones con responsables.",
     ],
     takeaway: "Clave: forecast probable y target aspiracional son conversaciones distintas.",
     unlock: "Mini juego recomendado: Forecast vs objetivo.",
@@ -142,10 +233,12 @@ const lessons = [
     title: "Revision de supply",
     short: "Traducir deseo comercial en capacidad, materiales y restricciones.",
     theory: [
-      "Supply valida si el plan se puede ejecutar con planta, proveedores, stock y transporte.",
-      "Una restriccion visible permite decidir mix, clientes, fechas o inversion.",
-      "Ocultar restricciones genera urgencias y costos mas tarde.",
-      "El plan ejecutable conecta corto plazo con capacidades futuras.",
+      "Definicion: Supply Review valida si la demanda puede ejecutarse con planta, proveedores, stock y transporte.",
+      "Por que importa: una restriccion temprana permite decidir antes de prometer de mas.",
+      "Decisiones que habilita: priorizar clientes, cambiar mix, comprar capacidad, ajustar fechas o aceptar costo extra.",
+      "KPIs afectados: servicio, OTIF, inventario, costo SC, cash, riesgo y satisfaccion.",
+      "Error comun: ocultar capacidad limitada para evitar conflicto y terminar pagando urgencias.",
+      "Ejemplo: demanda 120, capacidad 105; Supply debe mostrar alternativas: overtime, mix rentable, proveedor alternativo o gap.",
     ],
     takeaway: "Clave: una restriccion bien explicada no frena el negocio; lo enfoca.",
     unlock: "Mini juego recomendado: Restricciones de supply.",
@@ -155,10 +248,12 @@ const lessons = [
     title: "S&OP ejecutivo",
     short: "Donde los trade-offs se convierten en decisiones de negocio.",
     theory: [
-      "El board decide sobre gaps, riesgos, inversiones, prioridades y excepciones.",
-      "No deberia revisar datos desde cero: deberia elegir entre alternativas preparadas.",
-      "La salida debe ser clara: decision, responsable, premisa, KPI y fecha.",
-      "Sin sponsor ejecutivo, S&OP se vuelve una reunion informativa.",
+      "Definicion: Executive S&OP es donde los trade-offs preparados se convierten en decisiones de negocio.",
+      "Por que importa: sin decision ejecutiva, los conflictos quedan vivos y bajan como urgencias a la operacion.",
+      "Decisiones que habilita: aceptar costo, priorizar clientes, proteger margen, invertir capacidad o declarar gap.",
+      "KPIs afectados: margen, servicio, cash, costo SC, riesgo, satisfaccion y crecimiento.",
+      "Error comun: usar la reunion para revisar datos desde cero en lugar de elegir entre alternativas.",
+      "Ejemplo: cumplir 100% servicio exige flota extra; el board decide si paga el costo o negocia nivel de servicio.",
     ],
     takeaway: "Clave: el S&OP ejecutivo debe destrabar, no solo escuchar.",
     unlock: "Mini juego recomendado: Decision ejecutiva.",
@@ -168,10 +263,12 @@ const lessons = [
     title: "Forecast vs objetivo",
     short: "Separar lo probable de lo deseado para gestionar el GAP.",
     theory: [
-      "Forecast es la mejor lectura probable; target es el objetivo del negocio.",
-      "El GAP no se esconde: se gestiona con acciones, responsables y riesgos.",
-      "Igualar forecast al target sin acciones crea falsa certeza.",
-      "Cerrar gap puede subir ventas, pero tambien costo, riesgo, inventario o erosionar margen.",
+      "Definicion: Forecast es la demanda mas probable; target es la ambicion u objetivo del negocio.",
+      "Por que importa: ocultar el GAP crea alineacion falsa y deja al negocio sin acciones.",
+      "Decisiones que habilita: promociones, cambios de mix, capacidad adicional, negociacion comercial o aceptacion de gap.",
+      "KPIs afectados: servicio, stock, margen, costo, cash, satisfaccion y forecast accuracy.",
+      "Error comun: forzar forecast = target para evitar una conversacion incomoda.",
+      "Ejemplo: target 100 y forecast 92; S&OP decide como cerrar 8 puntos y que costo/riesgo acepta.",
     ],
     takeaway: "Clave: un GAP visible es una oportunidad de decision.",
     unlock: "Mini juego recomendado: Forecast vs objetivo.",
@@ -181,10 +278,12 @@ const lessons = [
     title: "KPIs",
     short: "El tablero que muestra si una decision mejora o solo desplaza el problema.",
     theory: [
-      "Nivel de servicio muestra si cumplimos la promesa al cliente.",
-      "Inventario y flujo de caja muestran cuanto capital queda atrapado.",
-      "Margen y costo de Supply Chain muestran si el volumen genera valor.",
-      "Riesgo y satisfaccion del cliente muestran consecuencias futuras, no solo el cierre del mes.",
+      "Definicion: KPIs son el tablero que muestra si una decision mejora el sistema o solo mueve el problema.",
+      "Por que importa: ningun KPI cuenta toda la historia; servicio alto puede esconder sobrecosto o cash atrapado.",
+      "Decisiones que habilita: ajustar inventario, priorizar servicio, proteger margen, reducir riesgo o invertir capacidad.",
+      "KPIs afectados: todos interactuan: servicio, inventario, margen, costo SC, riesgo, cash y satisfaccion.",
+      "Error comun: optimizar un KPI aislado, como bajar inventario, sin mirar quiebre de stock futuro.",
+      "Ejemplo: subir safety stock mejora servicio, pero puede bajar cash y aumentar obsolescencia.",
     ],
     takeaway: "Clave: ningun KPI cuenta toda la historia solo.",
     unlock: "Mini juego recomendado: Desafio de stock.",
@@ -194,10 +293,12 @@ const lessons = [
     title: "Trade-offs",
     short: "La esencia del proceso: decidir que se protege y que costo se acepta.",
     theory: [
-      "Servicio vs costo: cumplir rapido puede ser caro.",
-      "Inventario vs cash: mas stock protege, pero consume capital.",
-      "Ventas vs margen: volumen sin mix rentable puede destruir valor.",
-      "Velocidad vs calidad: llegar antes no sirve si se rompe confianza.",
+      "Definicion: un trade-off es elegir que se protege y que costo se acepta.",
+      "Por que importa: en Supply Chain casi nunca hay una decision gratis; siempre hay tension entre objetivos.",
+      "Decisiones que habilita: servicio vs costo, inventario vs cash, ventas vs margen, velocidad vs calidad.",
+      "KPIs afectados: servicio, margen, costo, cash, riesgo, inventario y satisfaccion.",
+      "Error comun: presentar una opcion como perfecta sin explicitar que KPI paga el costo.",
+      "Ejemplo: abrir domingo salva OTIF, pero sube costo y riesgo de calidad; el board debe aprobar el trade-off.",
     ],
     takeaway: "Clave: la buena decision no elimina el costo; lo hace consciente.",
     unlock: "Mini juego recomendado: Decision ejecutiva.",
@@ -207,10 +308,12 @@ const lessons = [
     title: "Liderazgo",
     short: "Sostener el proceso cuando la presion empuja a improvisar.",
     theory: [
-      "Liderar S&OP es hacer preguntas incomodas antes de que el mercado las cobre.",
-      "Un lider trae alternativas, no solo problemas.",
-      "La comunicacion separa hechos, premisas, riesgos, oportunidades y decisiones.",
-      "La confianza aparece cuando las areas ven que el proceso decide de verdad.",
+      "Definicion: liderazgo en Supply Chain es convertir conflicto funcional en decision entendible.",
+      "Por que importa: bajo presion, las areas tienden a defenderse; el lider mantiene hechos, premisas y opciones claras.",
+      "Decisiones que habilita: priorizar, escalar riesgos, pedir aprobacion y sostener acuerdos entre funciones.",
+      "KPIs afectados: sincronizacion, satisfaccion, riesgo, servicio, margen y costo.",
+      "Error comun: buscar culpables en vez de hacer visible la causa y la accion correctiva.",
+      "Ejemplo: ante una falta de material, el lider no acusa; arma escenarios y define cliente, mix y comunicacion.",
     ],
     takeaway: "Clave: liderazgo es convertir conflicto funcional en una decision entendible.",
     unlock: "Mini juego recomendado: Reunion S&OP.",
@@ -220,14 +323,145 @@ const lessons = [
     title: "Decision bajo presion",
     short: "Pensar bajo incertidumbre, tiempo limitado y consecuencias futuras.",
     theory: [
-      "El forecast perfecto no existe y la certeza total suele llegar tarde.",
-      "Las crisis revelan fallas de proceso: alertas, premisas, responsables o escenarios ausentes.",
-      "La decision correcta explicita impacto en cliente, costo, margen, riesgo y futuro.",
-      "Lo que se decide este mes puede crear ventaja o deuda operativa en el siguiente.",
+      "Definicion: decidir bajo presion es actuar con incertidumbre, tiempo limitado y consecuencias futuras.",
+      "Por que importa: esperar certeza perfecta suele llegar tarde y agrandar el costo operativo.",
+      "Decisiones que habilita: activar escenarios, aceptar costo, renegociar promesas, priorizar clientes o proteger cash.",
+      "KPIs afectados: servicio, margen, costo, riesgo, cash, satisfaccion y calidad.",
+      "Error comun: improvisar sin dejar premisas, responsables ni aprendizaje para el siguiente ciclo.",
+      "Ejemplo: un pico de demanda puede justificar stock extra hoy, pero tambien crear sobrestock si la senal era temporal.",
     ],
     takeaway: "Clave: aprender S&OP es aprender a dirigir bajo presion.",
     unlock: "Simulacion recomendada: Dirigi el negocio.",
   },
+];
+
+const lessonCheckpoints = [
+  [
+    {
+      q: "Ventas, Supply y Finanzas llegan con tres numeros distintos al cierre mensual. Que deberia buscar S&OP?",
+      options: ["Elegir el numero de Ventas para acelerar", "Construir un plan unico con premisas, restricciones y decisiones", "Pedir a cada area que ejecute su propio plan", "Esperar al cierre para saber quien tenia razon"],
+      answer: 1,
+      explain: "S&OP crea una verdad operable: un plan comun con premisas, responsables, riesgos y decisiones visibles.",
+    },
+    {
+      q: "El board pide crecer, pero supply muestra capacidad limitada. Cual es la conversacion correcta?",
+      options: ["Ocultar la restriccion para no frenar ambicion", "Forzar forecast al objetivo", "Mostrar alternativas con impacto en cliente, margen, costo y riesgo", "Dejar que Operaciones resuelva durante el mes"],
+      answer: 2,
+      explain: "El proceso sirve para decidir antes de ejecutar, no para trasladar el conflicto a urgencias operativas.",
+    },
+  ],
+  [
+    {
+      q: "Sales sube target de 100 a 115, pero baseline sigue en 96 y Supply tiene capacidad limitada. Que debe hacer Demand Review?",
+      options: ["Cambiar el forecast a 115 para alinear", "Mantener forecast 96, mostrar GAP, documentar supuestos y definir acciones", "Sacar a Supply de la discusion", "Esperar al cierre del mes"],
+      answer: 1,
+      explain: "El forecast representa lo probable. El GAP contra target debe quedar visible para decidir acciones y riesgos.",
+    },
+    {
+      q: "Una promocion grande aparece sin volumen confirmado de cliente. Cual es la mejor respuesta?",
+      options: ["Cargar todo el volumen como forecast firme", "Ignorar la promocion porque no hay certeza", "Crear escenario base/upside con triggers y responsables", "Pedir a Supply que produzca todo por seguridad"],
+      answer: 2,
+      explain: "Cuando hay incertidumbre, Demand Review debe usar escenarios y triggers, no falsa certeza.",
+    },
+  ],
+  [
+    {
+      q: "La demanda pide 120, pero planta y proveedor solo cubren 105. Que deberia hacer Supply Review?",
+      options: ["Aceptar 120 y resolver despues", "Mostrar restriccion y alternativas de mix, overtime, proveedor o gap", "Bajar forecast sin avisar", "Priorizar el primer pedido que llegue"],
+      answer: 1,
+      explain: "La restriccion visible permite decisiones de negocio antes de prometer lo que no puede ejecutarse.",
+    },
+    {
+      q: "Supply detecta lead time dos semanas mayor al supuesto. Que decision habilita mejor el proceso?",
+      options: ["Actualizar punto de pedido y mostrar impacto en servicio/cash", "Mantener parametros para no alterar el plan", "Culpar al proveedor y esperar", "Bajar safety stock para compensar"],
+      answer: 0,
+      explain: "Un cambio de lead time afecta inventario, servicio, cash y riesgo; debe entrar al plan.",
+    },
+  ],
+  [
+    {
+      q: "El S&OP ejecutivo recibe tres alternativas para cerrar el mes: costo extra, renegociar cliente o aceptar gap. Que deberia hacer?",
+      options: ["Pedir mas reportes antes de decidir", "Elegir una alternativa con KPI, responsable y premisa clara", "Devolver el problema a Supply", "Cambiar todos los KPIs objetivo"],
+      answer: 1,
+      explain: "El ejecutivo debe destrabar trade-offs preparados y dejar decisiones accionables.",
+    },
+    {
+      q: "Una decision mejora servicio pero destruye margen. Como deberia tratarse en Executive S&OP?",
+      options: ["Ocultarla si salva el OTIF", "Aprobarla automaticamente", "Mostrar costo/beneficio y decidir si el negocio acepta el trade-off", "Pasarla a la reunion siguiente"],
+      answer: 2,
+      explain: "El board decide que costo acepta para proteger cliente, margen, cash o estrategia.",
+    },
+  ],
+  [
+    {
+      q: "Target es 100, forecast probable 92. Que es lo mas sano para el proceso?",
+      options: ["Subir forecast a 100 sin acciones", "Mostrar GAP 8 y definir acciones, riesgos y responsables", "Eliminar target", "Pedir a Supply que fabrique 100"],
+      answer: 1,
+      explain: "El GAP visible permite decidir como cerrar la diferencia entre realidad y ambicion.",
+    },
+    {
+      q: "Marketing quiere sumar una promo no validada para llegar al target. Que deberia pedirse?",
+      options: ["Premisas, volumen esperado, riesgo, impacto en KPIs y trigger de decision", "Que carguen el volumen sin debate", "Que Finanzas ignore el margen", "Que se ejecute aunque no haya stock"],
+      answer: 0,
+      explain: "Cerrar gap requiere acciones explicitas y evaluadas, no deseos cargados como forecast.",
+    },
+  ],
+  [
+    {
+      q: "Inventario baja y cash mejora, pero el servicio empieza a caer. Que lectura es mas completa?",
+      options: ["La decision fue buena porque cash subio", "La decision desplazo el problema hacia cliente y riesgo", "Hay que bajar mas stock", "Servicio no importa si margen esta bien"],
+      answer: 1,
+      explain: "Los KPIs deben leerse juntos: mejorar uno puede deteriorar otro.",
+    },
+    {
+      q: "El margen sube por vender mix premium, pero fill rate cae en clientes estrategicos. Que deberia discutir S&OP?",
+      options: ["Solo celebrar margen", "Volver al mix anterior sin analizar", "Balance entre rentabilidad, servicio, cliente y capacidad", "Eliminar clientes estrategicos del KPI"],
+      answer: 2,
+      explain: "Un KPI financiero fuerte puede esconder deterioro de promesa y satisfaccion.",
+    },
+  ],
+  [
+    {
+      q: "Abrir domingo salva servicio, pero sube costo y riesgo de calidad. Que respuesta muestra mejor trade-off thinking?",
+      options: ["Hacerlo sin avisar porque mejora servicio", "Rechazarlo siempre por costo", "Presentar opciones y pedir aprobacion del costo/riesgo aceptado", "Cambiar el KPI de servicio"],
+      answer: 2,
+      explain: "La buena decision no elimina el costo; lo hace explicito para decidir conscientemente.",
+    },
+    {
+      q: "Ventas quiere volumen barato para cerrar target, Finanzas pide margen. Que deberia hacer S&OP?",
+      options: ["Elegir volumen siempre", "Elegir margen siempre", "Mostrar escenarios de mix y su impacto en margen, servicio y cash", "Evitar la discusion"],
+      answer: 2,
+      explain: "Los trade-offs funcionales se resuelven con escenarios comparables, no con imposiciones aisladas.",
+    },
+  ],
+  [
+    {
+      q: "Hay quiebre por falta de material y las areas empiezan a culparse. Que haria un lider S&OP?",
+      options: ["Buscar culpable publico", "Separar hechos, premisas, riesgos y alternativas de decision", "Esconder la falta hasta tener solucion", "Cambiar el forecast sin explicar"],
+      answer: 1,
+      explain: "El liderazgo convierte conflicto en claridad accionable, sin cultura de culpa.",
+    },
+    {
+      q: "Supply avisa una restriccion que puede afectar un cliente clave. Que comunicacion es mas lider?",
+      options: ["Problema sin alternativas", "Silencio hasta el cierre", "Escenarios con impacto, responsable y decision requerida", "Mensaje tecnico sin KPI"],
+      answer: 2,
+      explain: "Un lider trae alternativas y el impacto de cada una para que el negocio pueda decidir.",
+    },
+  ],
+  [
+    {
+      q: "Un cliente pide volumen inesperado para la semana proxima. Hay stock parcial y margen atractivo. Que decision es mas madura?",
+      options: ["Aceptar todo sin validar supply", "Rechazar todo por incertidumbre", "Evaluar servicio, margen, capacidad, riesgo futuro y promesa al cliente", "Cambiar el target despues"],
+      answer: 2,
+      explain: "Bajo presion, la decision correcta explicita impacto presente y consecuencia futura.",
+    },
+    {
+      q: "La certeza total llegaria despues del cierre. Que deberia hacer el equipo?",
+      options: ["Esperar el dato perfecto", "Decidir con escenarios, premisas y triggers", "Ocultar el riesgo", "Cancelar el proceso S&OP"],
+      answer: 1,
+      explain: "En Supply Chain, una decision suficientemente informada a tiempo vale mas que una certeza perfecta tarde.",
+    },
+  ],
 ];
 
 const baseState = {
@@ -253,12 +487,17 @@ let currentMeetingScenario = 0;
 let currentDecisionScenario = 0;
 let currentStory = 0;
 let currentQuiz = 0;
+let currentHeroVisual = 0;
 let quizAnswered = new Set();
 let quizFirstAttempts = new Map();
+let lessonEngagement = {};
+let lessonTimer = null;
 let selectedGapActions = new Set();
 let masterMonth = 0;
 let masterHistory = [];
 let masterPending = [];
+let masterRandomEvents = [];
+let operationalStress = { quality: 0, supply: 0, customer: 0 };
 let masterState = {};
 let masterTimeline = [];
 let shownConsequenceIds = new Set();
@@ -1119,6 +1358,297 @@ function mergeImpact(target, source = {}) {
   });
 }
 
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(progressKey) || "null");
+    return JSON.parse(JSON.stringify({ ...defaultProgress, ...(saved || {}) }));
+  } catch {
+    return JSON.parse(JSON.stringify(defaultProgress));
+  }
+}
+
+function saveProgress() {
+  // Future Supabase sync point: replace/extend this localStorage write with authenticated user progress persistence.
+  localStorage.setItem(progressKey, JSON.stringify(progress));
+}
+
+function uniquePush(list, item) {
+  if (!list.includes(item)) list.push(item);
+}
+
+function levelIndexByName(name) {
+  return Math.max(0, levels.findIndex((level) => level.name === name));
+}
+
+function completedCoreMiniGames() {
+  return progress.completedMiniGames.filter((game) => coreMiniGames.includes(game)).length;
+}
+
+function calculateLevel() {
+  const lessonCount = progress.completedSections.filter((item) => item.startsWith("lesson-")).length;
+  const miniCount = completedCoreMiniGames();
+  let unlocked = levels[0];
+  levels.forEach((level) => {
+    const meetsGate =
+      progress.xp >= level.xp &&
+      lessonCount >= level.lessons &&
+      miniCount >= level.miniGames &&
+      progress.lastSimulationScore >= level.simulationScore;
+    if (meetsGate) unlocked = level;
+  });
+  return unlocked.name;
+}
+
+function nextLevelInfo() {
+  const index = levelIndexByName(progress.level);
+  return levels[Math.min(index + 1, levels.length - 1)];
+}
+
+function currentDifficulty() {
+  const index = levelIndexByName(progress.level);
+  return {
+    index,
+    label: levels[index].name,
+    targetPressure: Math.min(10, index * 2),
+    forecastPressure: Math.min(7, index),
+    negativeMultiplier: 1 + index * 0.08,
+  };
+}
+
+function showToast(message) {
+  const stack = document.querySelector("#toastStack");
+  if (!stack) return;
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  stack.appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+}
+
+function showLevelUpModal(levelName) {
+  const modal = document.querySelector("#levelModal");
+  if (!modal) return;
+  document.querySelector("#levelModalTitle").textContent = levelName;
+  document.querySelector("#levelModalCopy").textContent =
+    "Subiste de nivel porque no solo juntaste XP: tambien completaste hitos de teoria, practica y performance.";
+  modal.classList.add("active");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function addXP(amount, reason = "Progreso") {
+  if (!amount) return;
+  const previousLevel = progress.level;
+  progress.xp += amount;
+  progress.level = calculateLevel();
+  saveProgress();
+  renderProgressDashboard();
+  showToast(`+${amount} XP · ${reason}`);
+  if (progress.level !== previousLevel) showLevelUpModal(progress.level);
+}
+
+function unlockBadge(name) {
+  if (progress.badges.includes(name)) return;
+  uniquePush(progress.badges, name);
+  saveProgress();
+  renderProgressDashboard();
+  showToast(`Badge desbloqueado: ${name}`);
+}
+
+function checkBadges() {
+  const lessonCount = progress.completedSections.filter((item) => item.startsWith("lesson-")).length;
+  if (lessonCount >= 3) unlockBadge("One Plan Thinker");
+  if (progress.completedMiniGames.includes("forecast")) unlockBadge("Gap Hunter");
+  if (progress.completedMiniGames.includes("stock")) unlockBadge("Inventory Guardian");
+  if (progress.marginProtected >= 2) unlockBadge("Margin Protector");
+  if (progress.balancedDecisions >= 3) unlockBadge("Trade-off Master");
+  if (progress.lastSimulationScore > 0) unlockBadge("Crisis Leader");
+  if (progress.completedMiniGames.includes("quiz")) unlockBadge("No Blame Culture");
+  if (progress.lastSimulationScore >= 110) unlockBadge("SC Director Mindset");
+}
+
+function completeLearningJourney(index) {
+  const id = `lesson-${index}`;
+  if (progress.completedSections.includes(id)) return;
+  uniquePush(progress.completedSections, id);
+  addXP(40, "Modulo de teoria completado");
+  checkBadges();
+}
+
+function isLessonCompleted(index) {
+  return progress.completedSections.includes(`lesson-${index}`);
+}
+
+function getLessonEngagement(index) {
+  if (!lessonEngagement[index]) {
+    lessonEngagement[index] = {
+      elapsed: 0,
+      contentViewed: false,
+      checkpointCompleted: [],
+      checkpointFeedback: {},
+    };
+  }
+  return lessonEngagement[index];
+}
+
+function stopLessonTimer() {
+  if (lessonTimer) clearInterval(lessonTimer);
+  lessonTimer = null;
+}
+
+function startLessonEngagement(index) {
+  stopLessonTimer();
+  if (index === null || isLessonCompleted(index)) {
+    updateLessonProgressUI(index);
+    return;
+  }
+  getLessonEngagement(index);
+  updateLessonProgressUI(index);
+  lessonTimer = setInterval(() => {
+    if (currentLesson !== index) return stopLessonTimer();
+    const state = getLessonEngagement(index);
+    state.elapsed = Math.min(25, state.elapsed + 1);
+    updateLessonProgressUI(index);
+    maybeCompleteLesson(index);
+  }, 1000);
+}
+
+function maybeCompleteLesson(index) {
+  if (isLessonCompleted(index)) return;
+  const state = getLessonEngagement(index);
+  const allCheckpointsDone = lessonCheckpoints[index].every((_, checkpointIndex) => state.checkpointCompleted.includes(checkpointIndex));
+  if (state.elapsed >= 25 && state.contentViewed && allCheckpointsDone) {
+    completeLearningJourney(index);
+    updateLessonProgressUI(index);
+    renderJourney();
+    startLessonEngagement(index);
+    showToast("Modulo completado · XP otorgado");
+  }
+}
+
+function updateLessonProgressUI(index) {
+  if (index === null || index === undefined) return;
+  const panel = document.querySelector(`[data-lesson-panel="${index}"]`);
+  if (!panel) return;
+  const state = getLessonEngagement(index);
+  const completed = isLessonCompleted(index);
+  const timeDone = completed || state.elapsed >= 25;
+  const contentDone = completed || state.contentViewed;
+  const correctCount = completed ? lessonCheckpoints[index].length : state.checkpointCompleted.length;
+  const checkpointDone = completed || correctCount === lessonCheckpoints[index].length;
+  panel.querySelector("[data-lesson-time]").textContent = completed ? "Completado" : `${state.elapsed}/25s`;
+  panel.querySelector("[data-lesson-content]").textContent = contentDone ? "Visto" : "Pendiente";
+  panel.querySelector("[data-lesson-checkpoint]").textContent = checkpointDone ? "Correcto" : `${correctCount}/${lessonCheckpoints[index].length}`;
+  panel.querySelector("[data-lesson-time]").classList.toggle("done", timeDone);
+  panel.querySelector("[data-lesson-content]").classList.toggle("done", contentDone);
+  panel.querySelector("[data-lesson-checkpoint]").classList.toggle("done", checkpointDone);
+  const status = panel.querySelector("[data-lesson-status]");
+  if (completed) status.textContent = "Completed";
+  else if (!timeDone) status.textContent = "Mantené el modulo abierto al menos 25 segundos.";
+  else if (!contentDone) status.textContent = "Revisá o revelá el contenido completo.";
+  else if (!checkpointDone) status.textContent = "Respondé correctamente el checkpoint.";
+  else status.textContent = "Listo para completar.";
+}
+
+function completeMiniGame(id, score = 0) {
+  const firstCompletion = !progress.completedMiniGames.includes(id);
+  if (firstCompletion) {
+    uniquePush(progress.completedMiniGames, id);
+    addXP(50, "Mini juego completado");
+  }
+  const previousBest = progress.bestScores[id] || 0;
+  if (score > previousBest) {
+    progress.bestScores[id] = score;
+    addXP(previousBest ? 20 : 0, "Mejoraste tu score");
+  }
+  saveProgress();
+  checkBadges();
+  renderProgressDashboard();
+}
+
+function completeMasterSimulation(score) {
+  const previousScore = progress.lastSimulationScore || 0;
+  const firstCompletion = !progress.completedSections.includes("master-simulation");
+  uniquePush(progress.completedSections, "master-simulation");
+  progress.lastSimulationScore = Math.max(previousScore, score);
+  addXP(firstCompletion ? 120 : 0, "Simulacion maestra completada");
+  if (score > previousScore) addXP(20, "Mejoraste tu simulacion");
+  saveProgress();
+  checkBadges();
+  renderProgressDashboard();
+}
+
+function registerDecision(impact = {}) {
+  progress.totalDecisions += 1;
+  const service = impact.service ?? impact.otif ?? impact.fillRate ?? 0;
+  const margin = impact.margin ?? 0;
+  const risk = impact.risk ?? impact.waste ?? 0;
+  const balanced = service >= 0 && margin >= 0 && risk <= 1;
+  if (balanced) {
+    progress.balancedDecisions += 1;
+    addXP(10, "Decision balanceada");
+  }
+  if (service >= 3 || (impact.stock ?? 0) >= 3) {
+    progress.stockoutsAvoided += 1;
+    addXP(15, "Quiebre evitado");
+  }
+  if (margin >= 2) {
+    progress.marginProtected += 1;
+    addXP(15, "Margen protegido");
+  }
+  saveProgress();
+}
+
+function renderProgressDashboard() {
+  const dashboard = document.querySelector("#progressDashboard");
+  if (!dashboard) return;
+  progress.level = calculateLevel();
+  const currentIndex = levelIndexByName(progress.level);
+  const next = nextLevelInfo();
+  const previousXp = levels[currentIndex]?.xp || 0;
+  const nextXp = next.xp || previousXp;
+  const xpRange = Math.max(1, nextXp - previousXp);
+  const xpPct = currentIndex === levels.length - 1 ? 100 : Math.min(100, ((progress.xp - previousXp) / xpRange) * 100);
+  const lessonCount = progress.completedSections.filter((item) => item.startsWith("lesson-")).length;
+  document.querySelector("#progressLevel").textContent = progress.level;
+  document.querySelector("#progressTitle").textContent = currentDifficulty().index >= 4 ? "Liderando bajo presion real" : "Construyendo criterio S&OP";
+  document.querySelector("#progressXp").textContent = `${progress.xp} XP`;
+  document.querySelector("#progressBar").style.width = `${xpPct}%`;
+  document.querySelector("#progressNext").textContent =
+    currentIndex === levels.length - 1 ? "Nivel maximo alcanzado" : `Proximo nivel: ${next.name} · ${next.xp} XP + hitos`;
+  document.querySelector("#progressMiniGames").textContent = `${completedCoreMiniGames()}/${coreMiniGames.length}`;
+  document.querySelector("#progressLessons").textContent = `${lessonCount}/${lessons.length}`;
+  document.querySelector("#progressSimulation").textContent = progress.lastSimulationScore;
+  document.querySelector("#badgeShelf").innerHTML = badges
+    .map((badge) => {
+      const unlocked = progress.badges.includes(badge.name);
+      return `
+        <article class="badge-card ${unlocked ? "unlocked" : "locked"}" title="${badge.description}">
+          <div class="badge-medal"><span>${badge.icon}</span></div>
+          <div>
+            <strong>${badge.name}</strong>
+            <p>${badge.description}</p>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+  const bestScores = Object.entries(progress.bestScores);
+  document.querySelector("#progressBestScores").innerHTML = bestScores.length
+    ? bestScores.map(([game, score]) => `<span>${game}: ${score}</span>`).join("")
+    : "<span>Best scores: todavia sin registros</span>";
+  const difficulty = document.querySelector("#difficultyLabel");
+  if (difficulty) difficulty.textContent = `Dificultad actual: ${currentDifficulty().label}`;
+  saveProgress();
+}
+
+function resetProgress() {
+  if (!confirm("Seguro que queres borrar todo el progreso guardado?")) return;
+  localStorage.clear();
+  progress = JSON.parse(JSON.stringify(defaultProgress));
+  renderProgressDashboard();
+  showToast("Progreso reiniciado");
+}
+
 function recalcState() {
   const next = { ...baseState };
   Object.values(impacts).forEach((impact) => mergeImpact(next, impact));
@@ -1235,29 +1765,59 @@ function renderDashboard() {
 function renderJourney() {
   document.querySelector("#roadmap").innerHTML = lessons
     .map((lesson, index) => `
-      <button class="road-step ${index === currentLesson ? "active" : ""}" type="button" data-lesson="${index}">
+      <button class="road-step ${index === currentLesson ? "active" : ""} ${isLessonCompleted(index) ? "completed" : ""}" type="button" data-lesson="${index}">
         <strong>${lesson.num}</strong>
         <h3>${lesson.title}</h3>
         <p>${lesson.short}</p>
+        <span class="road-status">${isLessonCompleted(index) ? "Completed" : "Abrir modulo"}</span>
       </button>
-      ${index === currentLesson ? renderLesson(lesson) : ""}
+      ${index === currentLesson ? renderLesson(lesson, index) : ""}
     `)
     .join("");
 }
 
-function renderLesson(lesson) {
+function renderLesson(lesson, index) {
+  const checkpoints = lessonCheckpoints[index];
+  const completed = isLessonCompleted(index);
+  const engagement = getLessonEngagement(index);
   return `
-    <article class="lesson-panel" aria-live="polite">
-    <div>
+    <article class="lesson-panel" data-lesson-panel="${index}" aria-live="polite">
+    <div class="lesson-content-wrap">
       <p class="eyebrow">Teoria base</p>
       <h3>${lesson.num}. ${lesson.title}</h3>
+      <div class="lesson-scroll" data-lesson-scroll="${index}">
       <ul>
         ${lesson.theory.map((item) => `<li>${item}</li>`).join("")}
       </ul>
       <p class="lesson-takeaway">${lesson.takeaway}</p>
+      </div>
+      <button class="reveal-content" type="button" data-reveal-lesson="${index}">Revelar contenido completo</button>
+      <div class="lesson-checkpoint">
+        <span>Checkpoints</span>
+        ${checkpoints.map((checkpoint, checkpointIndex) => {
+          const checkpointDone = completed || engagement.checkpointCompleted.includes(checkpointIndex);
+          const feedback = engagement.checkpointFeedback[checkpointIndex] || "";
+          return `
+            <div class="checkpoint-card">
+              <h4>${checkpoint.q}</h4>
+              <div class="checkpoint-options">
+                ${checkpoint.options.map((option, optionIndex) => `
+                  <button type="button" data-checkpoint="${index}" data-checkpoint-question="${checkpointIndex}" data-checkpoint-option="${optionIndex}" ${checkpointDone ? "disabled" : ""}>${option}</button>
+                `).join("")}
+              </div>
+              <p class="checkpoint-feedback" data-checkpoint-feedback="${checkpointIndex}">${checkpointDone ? checkpoint.explain : feedback}</p>
+            </div>
+          `;
+        }).join("")}
+      </div>
     </div>
     <div class="lesson-unlock">
-      <span>Desbloquea mindset</span>
+      <span data-lesson-status>${completed ? "Completed" : "Progreso del modulo"}</span>
+      <div class="lesson-progress-list">
+        <p>Tiempo visto <strong data-lesson-time>${completed ? "Completado" : "0/25s"}</strong></p>
+        <p>Contenido visto <strong data-lesson-content>${completed ? "Visto" : "Pendiente"}</strong></p>
+        <p>Checkpoint <strong data-lesson-checkpoint>${completed ? "Correcto" : "Pendiente"}</strong></p>
+      </div>
       <strong>${lesson.unlock}</strong>
       <a href="#simulators">Ir a mini juegos</a>
     </div>
@@ -1266,7 +1826,13 @@ function renderLesson(lesson) {
 }
 
 function getGapScenario() {
-  return gapScenarios[currentGapScenario];
+  const scenario = gapScenarios[currentGapScenario];
+  const difficulty = currentDifficulty();
+  return {
+    ...scenario,
+    target: scenario.target + difficulty.targetPressure,
+    forecast: Math.max(0, scenario.forecast - difficulty.forecastPressure),
+  };
 }
 
 function renderGapScenario() {
@@ -1300,7 +1866,11 @@ function updateGapGame() {
   selectedGapActions.forEach((id) => {
     const action = scenario.actions.find(([actionId]) => actionId === id);
     plan += action[3];
-    mergeImpact(impact, action[4]);
+    const adjustedImpact = {};
+    Object.entries(action[4]).forEach(([key, value]) => {
+      adjustedImpact[key] = value < 0 ? Math.round(value * currentDifficulty().negativeMultiplier) : value;
+    });
+    mergeImpact(impact, adjustedImpact);
   });
 
   impact.forecast = plan - baseState.forecast;
@@ -1322,6 +1892,11 @@ function updateGapGame() {
       ? `Estas acciones cambiaron el plan de ${scenario.forecast} a ${plan}. Mira que KPIs subieron y cuales pagaron el costo.`
       : "Sin acciones seleccionadas, el forecast vuelve a su base.",
   });
+  if (selectedGapActions.size) {
+    const score = Math.max(0, impactScore(impact) + (gap === 0 ? 10 : 0));
+    completeMiniGame("forecast", score);
+    registerDecision(impact);
+  }
 }
 
 function renderStockScenario() {
@@ -1427,10 +2002,45 @@ function renderStoryStage() {
   if (stage) stage.innerHTML = "";
 }
 
+const randomBusinessEvents = [
+  { text: "Proveedor informa demora de materia prima critica.", impact: { service: -4, cost: 3, risk: 5, cash: -2 } },
+  { text: "Calidad bloquea un lote por reclamo preventivo.", impact: { service: -3, margin: -2, risk: 4 } },
+  { text: "Transporte anuncia restriccion de capacidad regional.", impact: { service: -3, cost: 4, risk: 3 } },
+  { text: "Cliente clave escala por incumplimiento parcial.", impact: { service: -2, risk: 3, cash: -1 } },
+  { text: "Forecast detecta spike no previsto en canal moderno.", impact: { service: -2, margin: 2, risk: 4 } },
+  { text: "Parada menor de produccion reduce capacidad semanal.", impact: { service: -4, cost: 2, risk: 5 } },
+];
+
+function maybeAddRandomEvent() {
+  const difficulty = currentDifficulty();
+  if (difficulty.index < 3 || masterMonth >= masterMonths.length - 1) return;
+  if (masterRandomEvents.some((event) => event.from === masterMonth)) return;
+  if (Math.random() > Math.min(0.22 + difficulty.index * 0.08, 0.68)) return;
+  const event = randomBusinessEvents[Math.floor(Math.random() * randomBusinessEvents.length)];
+  masterRandomEvents.push({
+    ...event,
+    id: `random-${masterMonth}-${Date.now()}`,
+    from: masterMonth,
+    month: masterMonth + 1,
+    tone: "danger",
+    random: true,
+  });
+}
+
 function currentMasterImpact() {
   const total = {};
   masterHistory.forEach((entry) => mergeImpact(total, entry.impact));
   masterPending.filter((item) => item.month <= masterMonth).forEach((item) => mergeImpact(total, item.impact));
+  masterRandomEvents.filter((item) => item.month <= masterMonth).forEach((item) => mergeImpact(total, item.impact));
+  if (currentDifficulty().index >= 4) {
+    mergeImpact(total, {
+      service: -Math.floor((operationalStress.supply + operationalStress.customer) / 4),
+      margin: -Math.floor(operationalStress.quality / 5),
+      cost: Math.floor((operationalStress.supply + operationalStress.quality) / 5),
+      risk: Math.floor((operationalStress.quality + operationalStress.supply + operationalStress.customer) / 4),
+      cash: -Math.floor(operationalStress.supply / 5),
+    });
+  }
   return total;
 }
 
@@ -1468,17 +2078,19 @@ function recordMasterSnapshot() {
 }
 
 function activeConsequences() {
-  return masterPending.filter((item) => item.month <= masterMonth);
+  return [...masterPending, ...masterRandomEvents].filter((item) => item.month <= masterMonth);
 }
 
 function showConsequenceModal(item) {
   const modal = document.querySelector("#eventModal");
   const card = modal.querySelector(".event-modal-card");
-  const kind = item.tone === "benefit" ? "Beneficio activado" : "Alarma activada";
+  const kind = item.random ? "Evento aleatorio" : item.tone === "benefit" ? "Beneficio activado" : "Alarma activada";
   card.classList.remove("danger", "benefit");
   card.classList.add(item.tone === "benefit" ? "benefit" : "danger");
   document.querySelector("#eventModalKind").textContent = kind;
-  document.querySelector("#eventModalTitle").textContent = item.tone === "benefit" ? "Tu decision anterior te ayudo" : "Consecuencia de una decision anterior";
+  document.querySelector("#eventModalTitle").textContent = item.random
+    ? "El negocio cambio las condiciones"
+    : item.tone === "benefit" ? "Tu decision anterior te ayudo" : "Consecuencia de una decision anterior";
   document.querySelector("#eventModalCopy").textContent = item.text;
   modal.classList.add("active");
   modal.setAttribute("aria-hidden", "false");
@@ -1557,11 +2169,11 @@ function renderMasterSimulation() {
     .map((message) => `<div class="signal"><span>${message.split(":")[0]}</span><p>${message.includes(":") ? message.split(":").slice(1).join(":").trim() : message}</p></div>`)
     .join("");
 
-  const visibleConsequences = masterPending.filter((item) => item.month <= masterMonth);
+  const visibleConsequences = [...masterPending, ...masterRandomEvents].filter((item) => item.month <= masterMonth);
   const consequenceHtml = [
     ...visibleConsequences.map((item) => `
       <div class="consequence-alert ${item.tone || "danger"}">
-        <strong>${item.tone === "benefit" ? "Beneficio" : "Alarma"}</strong>
+        <strong>${item.random ? "Evento aleatorio" : item.tone === "benefit" ? "Beneficio" : "Alarma"}</strong>
         <p>${item.text}</p>
       </div>
     `),
@@ -1596,6 +2208,11 @@ function chooseMasterDecision(optionIndex) {
   } else {
     masterPending = masterPending.filter((item) => item.from !== masterMonth);
   }
+  operationalStress.quality = Math.max(0, operationalStress.quality + Math.max(0, (choice[1].risk || 0) + (choice[1].cost || 0)) - Math.max(0, choice[1].margin || 0));
+  operationalStress.supply = Math.max(0, operationalStress.supply + Math.max(0, -(choice[1].service || 0)) + Math.max(0, choice[1].cost || 0));
+  operationalStress.customer = Math.max(0, operationalStress.customer + Math.max(0, -(choice[1].service || 0)) + Math.max(0, -(choice[1].cash || 0)));
+  maybeAddRandomEvent();
+  registerDecision(choice[1]);
   if (masterMonth !== masterMonths.length - 1) completionModalShown = false;
   renderMasterSimulation();
 }
@@ -1613,6 +2230,7 @@ function renderFinalEvaluation(score) {
   else if (score >= 75) rating = "Manager S&OP fuerte";
   else if (score >= 55) rating = "Planner reactivo";
   const choiceReview = buildMasterReview();
+  completeMasterSimulation(score);
   node.innerHTML = `
     <p class="eyebrow">Evaluacion final</p>
     <h3>${rating}</h3>
@@ -1744,6 +2362,8 @@ function restartMasterSimulation() {
   masterMonth = 0;
   masterHistory = [];
   masterPending = [];
+  masterRandomEvents = [];
+  operationalStress = { quality: 0, supply: 0, customer: 0 };
   masterTimeline = [];
   shownConsequenceIds = new Set();
   completionModalShown = false;
@@ -1817,13 +2437,73 @@ function showPageFromHash() {
 function bindEvents() {
   window.addEventListener("hashchange", showPageFromHash);
 
+  document.querySelector("[data-hero-prev]").addEventListener("click", () => renderHeroVisual(currentHeroVisual - 1));
+  document.querySelector("[data-hero-next]").addEventListener("click", () => renderHeroVisual(currentHeroVisual + 1));
+  document.querySelector("#heroDots").addEventListener("click", (event) => {
+    const dot = event.target.closest("[data-hero-dot]");
+    if (!dot) return;
+    renderHeroVisual(Number(dot.dataset.heroDot));
+  });
+
   document.querySelector("#roadmap").addEventListener("click", (event) => {
+    const reveal = event.target.closest("[data-reveal-lesson]");
+    if (reveal) {
+      const index = Number(reveal.dataset.revealLesson);
+      getLessonEngagement(index).contentViewed = true;
+      reveal.textContent = "Contenido visto";
+      reveal.disabled = true;
+      updateLessonProgressUI(index);
+      maybeCompleteLesson(index);
+      return;
+    }
+
+    const checkpointOption = event.target.closest("[data-checkpoint]");
+    if (checkpointOption) {
+      const index = Number(checkpointOption.dataset.checkpoint);
+      if (isLessonCompleted(index)) return;
+      const selected = Number(checkpointOption.dataset.checkpointOption);
+      const questionIndex = Number(checkpointOption.dataset.checkpointQuestion);
+      const checkpoint = lessonCheckpoints[index][questionIndex];
+      const correct = selected === checkpoint.answer;
+      document.querySelectorAll(`[data-checkpoint="${index}"][data-checkpoint-question="${questionIndex}"]`).forEach((button) => button.classList.remove("correct", "wrong"));
+      checkpointOption.classList.add(correct ? "correct" : "wrong");
+      const state = getLessonEngagement(index);
+      const feedback = document.querySelector(`[data-lesson-panel="${index}"] [data-checkpoint-feedback="${questionIndex}"]`);
+      if (correct) {
+        uniquePush(state.checkpointCompleted, questionIndex);
+        state.checkpointFeedback[questionIndex] = checkpoint.explain;
+        document.querySelectorAll(`[data-checkpoint="${index}"][data-checkpoint-question="${questionIndex}"]`).forEach((button) => {
+          button.disabled = true;
+          if (Number(button.dataset.checkpointOption) === selected) button.classList.add("correct");
+        });
+        if (feedback) feedback.textContent = checkpoint.explain;
+      } else {
+        state.checkpointFeedback[questionIndex] = "No exactamente. Volve a mirar el caso: la mejor respuesta debe hacer visible el trade-off, las premisas y el impacto en KPIs.";
+        if (feedback) feedback.textContent = state.checkpointFeedback[questionIndex];
+      }
+      updateLessonProgressUI(index);
+      maybeCompleteLesson(index);
+      return;
+    }
+
     const step = event.target.closest("[data-lesson]");
     if (!step) return;
     const selected = Number(step.dataset.lesson);
     currentLesson = currentLesson === selected ? null : selected;
     renderJourney();
+    startLessonEngagement(currentLesson);
   });
+
+  document.querySelector("#roadmap").addEventListener("scroll", (event) => {
+    const scroller = event.target.closest("[data-lesson-scroll]");
+    if (!scroller) return;
+    const index = Number(scroller.dataset.lessonScroll);
+    if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 8) {
+      getLessonEngagement(index).contentViewed = true;
+      updateLessonProgressUI(index);
+      maybeCompleteLesson(index);
+    }
+  }, true);
 
   document.querySelectorAll(".tab").forEach((tab) => {
     tab.addEventListener("click", () => {
@@ -1868,6 +2548,7 @@ function bindEvents() {
     document.querySelectorAll("#stockOptions .quiz-option").forEach((item) => item.classList.remove("selected"));
     option.classList.add("selected");
     const answer = stockScenarios[currentStockScenario].options[Number(option.dataset.stock)];
+    completeMiniGame("stock", answer[1] ? 12 : 2);
     document.querySelector("#stockFeedback").textContent = answer[1]
       ? "Correcto: viste el patron. Los KPIs quedan sin cambios porque aca solo estas diagnosticando."
       : "Cuidado: esa lectura podria hacer reaccionar tarde al proceso. Los KPIs quedan sin cambios.";
@@ -1878,7 +2559,17 @@ function bindEvents() {
   document.querySelector("#decisionBoard").addEventListener("click", (event) => {
     const option = event.target.closest("[data-decision]");
     if (!option) return;
-    chooseDecisionPractice(Number(option.dataset.decision));
+    const selected = Number(option.dataset.decision);
+    chooseDecisionPractice(selected);
+    const scenario = decisionPracticeScenarios[currentDecisionScenario];
+    const gameId = {
+      "Restricciones de supply": "supply",
+      "Decision ejecutiva": "executive",
+      "Pico de demanda": "spike",
+      "Reunion S&OP": "meeting",
+    }[scenario.family] || "decision";
+    completeMiniGame(gameId, Math.max(0, impactScore(scenario.options[selected][2])));
+    registerDecision(scenario.options[selected][2]);
   });
 
   document.querySelector("#quizOptions").addEventListener("click", (event) => {
@@ -1896,6 +2587,10 @@ function bindEvents() {
       ? `Correcto. ${question.explain}`
       : `No exactamente. ${question.explain}`;
     document.querySelector("#nextQuizQuestion").hidden = false;
+    if (quizAnswered.size === quizQuestions.length) {
+      const correctAnswers = [...quizFirstAttempts.values()].filter(Boolean).length;
+      completeMiniGame("quiz", correctAnswers * 5);
+    }
   });
 
   document.querySelector("#resetQuiz").addEventListener("click", () => {
@@ -1947,6 +2642,20 @@ function bindEvents() {
   document.querySelector("#eventModal").addEventListener("click", (event) => {
     if (event.target.id === "eventModal") closeConsequenceModal();
   });
+
+  document.querySelector("#levelModalClose").addEventListener("click", () => {
+    document.querySelector("#levelModal").classList.remove("active");
+    document.querySelector("#levelModal").setAttribute("aria-hidden", "true");
+  });
+
+  document.querySelector("#levelModal").addEventListener("click", (event) => {
+    if (event.target.id === "levelModal") {
+      document.querySelector("#levelModal").classList.remove("active");
+      document.querySelector("#levelModal").setAttribute("aria-hidden", "true");
+    }
+  });
+
+  document.querySelector("#resetProgress").addEventListener("click", resetProgress);
 
   document.querySelector("#finalEvaluation").addEventListener("click", (event) => {
     const chartToggle = event.target.closest("[data-chart-toggle]");
@@ -2004,6 +2713,95 @@ function rotateQuotes() {
   }, 2600);
 }
 
+function renderHeroVisual(index = currentHeroVisual) {
+  currentHeroVisual = (index + heroVisualSlides.length) % heroVisualSlides.length;
+  const slide = heroVisualSlides[currentHeroVisual];
+  const flow = document.querySelector(".sop-flow");
+  if (!flow) return;
+  flow.classList.add("visual-refreshing");
+  setTimeout(() => {
+    flow.innerHTML = `
+      <div class="flow-header">
+        <span>${slide.title}</span>
+        <strong>${slide.tag}</strong>
+      </div>
+      ${renderHeroVisualBody(slide)}
+    `;
+    flow.classList.remove("visual-refreshing");
+  }, 160);
+  renderHeroDots();
+}
+
+function renderHeroVisualBody(slide) {
+  if (slide.type === "network") {
+    return `
+      <div class="hero-network">
+        ${slide.cards.map(([title, copy], index) => `
+          <div class="network-node node-${index}">
+            <strong>${title}</strong>
+            <span>${copy}</span>
+          </div>
+        `).join("")}
+        <div class="network-core">ONE PLAN</div>
+      </div>
+    `;
+  }
+  if (slide.type === "gap") {
+    return `
+      <div class="hero-gap-visual">
+        <div class="hero-gap-bars">
+          <div class="hero-gap-bar target"><span>${slide.cards[0][0]}</span><strong>${slide.cards[0][1]}</strong></div>
+          <div class="hero-gap-bar forecast"><span>${slide.cards[1][0]}</span><strong>${slide.cards[1][1]}</strong></div>
+        </div>
+        <div class="hero-gap-callout">
+          <span>${slide.cards[2][0]}</span>
+          <strong>${slide.cards[2][1]}</strong>
+          <p>${slide.cards[3][1]}</p>
+        </div>
+      </div>
+    `;
+  }
+  if (slide.type === "kpi") {
+    return `
+      <div class="hero-kpi-board">
+        ${slide.cards.map(([title, value], index) => `
+          <div class="hero-kpi-card pulse-${index}">
+            <span>${title}</span>
+            <strong>${value}</strong>
+            <div><i style="width:${Math.max(20, Number.parseInt(value, 10) || 72)}%"></i></div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+  return `
+    <div class="flow-ladder">
+      ${slide.cards.map(([num, title, copy], index) => `
+        <div class="flow-step ${["activity", "demand", "supply", "business", "executive"][index] || "activity"}">
+          <small>${num}</small>
+          <div>
+            <h3>${title}</h3>
+            <p>${copy}</p>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderHeroDots() {
+  const dots = document.querySelector("#heroDots");
+  if (!dots) return;
+  dots.innerHTML = heroVisualSlides
+    .map((_, index) => `<button class="${index === currentHeroVisual ? "active" : ""}" type="button" data-hero-dot="${index}" aria-label="Ver visual ${index + 1}"></button>`)
+    .join("");
+}
+
+function rotateHeroVisuals() {
+  renderHeroVisual(0);
+  setInterval(() => renderHeroVisual(currentHeroVisual + 1), 5200);
+}
+
 function applyVisualSet(pageId, setIndex) {
   const page = document.querySelector(`#${pageId}`);
   const visualSet = rotatingVisuals[pageId]?.[setIndex];
@@ -2040,8 +2838,10 @@ renderQuiz();
 renderCases();
 renderQuickPrompts();
 renderMasterSimulation();
+renderProgressDashboard();
 bindEvents();
 showPageFromHash();
 rotateQuotes();
+rotateHeroVisuals();
 rotatePageVisuals();
 recalcState();

@@ -24,7 +24,7 @@
 
     <main>
       <section id="home" class="page hero active">
-        <div class="hero-visual" aria-hidden="true">
+        <div class="hero-visual">
           <div class="sop-flow">
             <div class="flow-header">
               <span>Sincronizacion Down - Top</span>
@@ -82,6 +82,11 @@
               <strong>Servicio · Margen · Cash · Riesgo · Cliente</strong>
             </div>
           </div>
+          <div class="hero-visual-controls" aria-label="Cambiar visual hero">
+            <button type="button" data-hero-prev aria-label="Visual anterior">‹</button>
+            <div class="hero-dots" id="heroDots"></div>
+            <button type="button" data-hero-next aria-label="Visual siguiente">›</button>
+          </div>
         </div>
         <div class="hero-copy">
           <p class="eyebrow">Supply Chain Leadership Lab</p>
@@ -105,6 +110,39 @@
           <a class="primary-action" href="#journey">Ir al Journey</a>
         </div>
       </section>
+
+      <aside class="progress-dashboard" id="progressDashboard" aria-live="polite">
+        <div class="progress-main">
+          <div>
+            <p class="eyebrow">Progreso del alumno</p>
+            <h3 id="progressLevel">Junior Planner</h3>
+            <span id="progressTitle">Empezando el recorrido S&OP</span>
+          </div>
+          <div class="progress-xp">
+            <strong id="progressXp">0 XP</strong>
+            <div class="progress-track"><div id="progressBar"></div></div>
+            <small id="progressNext">Proximo nivel: 500 XP</small>
+          </div>
+        </div>
+        <div class="progress-meta">
+          <div><span>Mini juegos</span><strong id="progressMiniGames">0/6</strong></div>
+          <div><span>Modulos teoria</span><strong id="progressLessons">0/9</strong></div>
+          <div><span>Mejor simulacion</span><strong id="progressSimulation">0</strong></div>
+        </div>
+        <div class="badge-shelf" id="badgeShelf"></div>
+        <div class="best-score-row" id="progressBestScores"></div>
+        <button class="reset-progress" id="resetProgress" type="button">Reset Progress</button>
+      </aside>
+
+      <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+      <div class="level-modal" id="levelModal" aria-hidden="true">
+        <div class="level-modal-card">
+          <button class="level-modal-close" id="levelModalClose" type="button" aria-label="Cerrar progreso">×</button>
+          <p class="eyebrow">Level up</p>
+          <h3 id="levelModalTitle">Nuevo nivel desbloqueado</h3>
+          <p id="levelModalCopy"></p>
+        </div>
+      </div>
 
       <section id="journey" class="page section journey-section">
         <div class="page-banner">
@@ -160,6 +198,7 @@
           <p class="section-subtitle">
             Forecast modifica KPIs en tiempo real. Stock, sala de decisiones y quiz sirven para practicar diagnostico y criterio sin tocar el tablero.
           </p>
+          <div class="difficulty-pill" id="difficultyLabel">Dificultad actual: Junior Planner</div>
         </div>
 
         <div class="training-layout">
